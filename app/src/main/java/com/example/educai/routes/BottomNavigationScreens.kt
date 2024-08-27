@@ -38,6 +38,6 @@ sealed class BottomNavigationScreens (
 val BottomNavigationScreensList = listOf(
     BottomNavigationScreens.Posts,
     BottomNavigationScreens.Atividades,
-    BottomNavigationScreens.Pessoas,
     BottomNavigationScreens.Leaderboard,
+    BottomNavigationScreens.Pessoas,
 )
