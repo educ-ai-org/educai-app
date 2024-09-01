@@ -45,7 +45,7 @@ fun Home(navController: NavController) {
     ) {
         Text(
             text = "Turmas",
-            fontSize = 24.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.padding(bottom = 16.dp)
