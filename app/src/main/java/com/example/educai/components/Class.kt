@@ -2,6 +2,7 @@ package com.example.educai.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.educai.R
 
 @Composable
-fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:Int, OnClick: () -> Unit) {
+fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:Int, onClick: () -> Unit) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
@@ -39,6 +40,7 @@ fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:Int, OnClick
                 Color.LightGray,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
             )
+            .clickable { onClick() }
     ) {
         Column (
             verticalArrangement = Arrangement.SpaceAround,

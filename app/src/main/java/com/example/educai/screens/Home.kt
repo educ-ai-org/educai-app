@@ -61,7 +61,7 @@ fun Home(navController: NavController) {
                     nomeTurma = turma.nome,
                     nomeDisciplina = turma.disciplina,
                     quantidadeAlunos = turma.numeroDeAlunos,
-                    OnClick = {
+                    onClick = {
                         navController.navigate("turmaExemplo")
                         //navController.navigate("detalhesTurma/${turma.id}")
                     }
