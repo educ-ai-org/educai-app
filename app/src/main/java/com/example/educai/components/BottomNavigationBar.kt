@@ -1,7 +1,9 @@
 package com.example.educai.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -40,7 +42,8 @@ fun BottomNavigationBar(navController: NavController) {
 
     NavigationBar(
         containerColor = TabBarColor,
-        contentColor = TabBarColor
+        contentColor = TabBarColor,
+        windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         BottomNavigationScreensList.forEachIndexed { index, item ->
             NavigationBarItem(

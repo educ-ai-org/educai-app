@@ -5,9 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,10 +33,12 @@ fun TurmaUI() {
     Scaffold(
         bottomBar = {
             BottomAppBar(
+                contentPadding = PaddingValues(all = 0.dp),
                 modifier = Modifier
                     .padding(0.dp)
                     .shadow(16.dp),
                 containerColor = TabBarColor,
+                windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
                 BottomNavigationBar(navController = navController)
             }
@@ -40,7 +46,6 @@ fun TurmaUI() {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(0.dp)
                 .background(BackgroundColor)
         ) {

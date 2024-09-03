@@ -1,0 +1,89 @@
+# Build files
+/build/
+/.gradle/
+/.idea/
+/out/
+/captures/
+
+# Gradle
+.gradle
+/build/
+/gradle/
+/local.properties
+*.iml
+.gradle/
+gradle-app.setting
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# User-specific files
+.idea/
+/.DS_Store
+/local.properties
+*.iml
+/.idea/*
+*.ipr
+*.iws
+
+# Android Studio
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/copyright/
+.idea/codeStyles/
+.idea/jarRepositories.xml
+.idea/encodings.xml
+.idea/androidStudioFirstRun.xml
+.idea/markdown-navigator.xml
+.idea/sonarIssueData.xml
+.idea/vcs.xml
+.idea/codestyles/
+.idea/maven.xml
+.idea/modules/
+.idea/scopes/
+.idea/tasks.xml
+.idea/uiDesigner.xml
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.Trash-*
+
+# Keystore files
+*.jks
+*.keystore
+
+# Proguard
+proguard/
+
+# Log files
+*.log
+
+# Android Studio
+.idea/
+/*.iml
+/local.properties
+
+# Miscellaneous
+.DS_Store
+*.log
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+
+# Generated files
+/build/
