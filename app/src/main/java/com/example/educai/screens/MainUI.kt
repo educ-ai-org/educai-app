@@ -76,22 +76,24 @@ fun MainUI() {
                 )
             },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        showModal = true
-                    },
-                    modifier = Modifier
-                        .padding(bottom = if (currentRoute == "turmaExemplo") 90.dp else 10.dp),
-                    containerColor = MediumPurple,
-                    shape = RoundedCornerShape(50.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.dicionario_icone),
-                        contentDescription = "Dicionário",
+                if (currentRoute == "turmaExemplo" || currentRoute == "home") {
+                    FloatingActionButton(
+                        onClick = {
+                            showModal = true
+                        },
                         modifier = Modifier
-                            .padding(8.dp)
-                            .size(25.dp)
-                    )
+                            .padding(bottom = if (currentRoute == "turmaExemplo") 90.dp else 10.dp),
+                        containerColor = MediumPurple,
+                        shape = RoundedCornerShape(50.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.dicionario_icone),
+                            contentDescription = "Dicionário",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .size(25.dp)
+                        )
+                    }
                 }
             }
         ) { contentPadding ->
