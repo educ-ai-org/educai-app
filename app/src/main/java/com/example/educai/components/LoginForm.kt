@@ -69,19 +69,19 @@ fun LoginForm(
             Text(text = "Login")
         }
         Column(
-            verticalArrangement = Arrangement.Top, // Garante que os elementos estão alinhados no topo sem gaps
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 0.dp, bottom = 0.dp)
         ) {
             Text(
                 text = "Esqueceu a senha?",
-                modifier = Modifier.padding(0.dp), // Remove padding do Text
+                modifier = Modifier.padding(0.dp),
                 color = Color.Gray,
                 textDecoration = TextDecoration.Underline
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = "Login com contas sociais",
-                modifier = Modifier.padding(0.dp), // Remove padding do Text
+                modifier = Modifier.padding(0.dp),
                 color = Color.Gray,
                 fontSize = 10.sp
             )

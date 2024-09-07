@@ -5,13 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,24 +19,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.educai.R
-import com.example.educai.ui.theme.MediumPurple
 
 @Composable
 fun LoginContainer() {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(220.dp)
-            .background(MediumPurple)
-    ) {
-
-    }
-    Column(
-        modifier = Modifier
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+                clip = false
+            )
             .background(Color.White, RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(24.dp, top= 32.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.educai_logo_black),
