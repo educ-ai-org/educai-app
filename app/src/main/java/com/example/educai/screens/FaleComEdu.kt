@@ -156,8 +156,9 @@ fun FaleComEdu() {
                 ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 ?.getOrNull(0)
                 ?.let { text ->
+                    val formatedText = text.replaceFirstChar(Char::titlecaseChar)
                     messages.removeAt(messages.size - 1)
-                    messages.add(Message(text = text, LocalDateTime.now(), MessageType.SEND))
+                    messages.add(Message(text = formatedText, LocalDateTime.now(), MessageType.SEND))
                     recordingAudio = false
 
                     coroutineScope.launch {
