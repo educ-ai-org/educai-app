@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.educai.R
 import com.example.educai.screens.turma.Question
+import com.example.educai.ui.theme.GrayBold
+import com.example.educai.ui.theme.LightPurple
 
 val fonteBold = FontFamily(
     Font(R.font.montserrat_bold, FontWeight.Normal)
@@ -187,7 +189,7 @@ fun MaterialCreation() {
                         .fillMaxHeight()
                 ) {
                     Card(
-                        border = BorderStroke(1.dp, color = colorResource(id = R.color.grey_bold)),
+                        border = BorderStroke(1.dp, color = GrayBold),
                         shape = RoundedCornerShape(8.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         modifier = Modifier
@@ -228,7 +230,7 @@ fun MaterialCreation() {
                                                     }
                                                 },
                                                 colors = OutlinedTextFieldDefaults.colors(
-                                                    unfocusedBorderColor = colorResource(id = R.color.grey_bold)
+                                                    unfocusedBorderColor = GrayBold
                                                 ),
                                                 textStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte),
                                                 modifier = Modifier
@@ -242,7 +244,7 @@ fun MaterialCreation() {
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .height(checkboxData.height),
-                                                border = BorderStroke(1.dp, colorResource(id = R.color.grey_bold)),
+                                                border = BorderStroke(1.dp, GrayBold),
                                                 shape = RoundedCornerShape(4.dp)
                                             ) {
                                                 Row(
@@ -253,9 +255,7 @@ fun MaterialCreation() {
                                                     LabelWithIcon(
                                                         id = checkboxData.icon,
                                                         texto = checkboxData.title,
-                                                        textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else colorResource(
-                                                            id = R.color.grey_bold
-                                                        )
+                                                        textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else GrayBold
                                                     )
                                                 }
                                             }
@@ -266,7 +266,7 @@ fun MaterialCreation() {
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .height(checkboxData.height),
-                                                border = BorderStroke(1.dp, colorResource(id = R.color.grey_bold)),
+                                                border = BorderStroke(1.dp, GrayBold),
                                                 shape = RoundedCornerShape(4.dp)
                                             ) {
                                                 Row(
@@ -277,9 +277,7 @@ fun MaterialCreation() {
                                                     LabelWithIcon(
                                                         id = checkboxData.icon,
                                                         texto = checkboxData.title,
-                                                        textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else colorResource(
-                                                            id = R.color.grey_bold
-                                                        )
+                                                        textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else GrayBold
                                                     )
                                                 }
                                             }
@@ -305,7 +303,7 @@ fun MaterialCreation() {
                                 .padding(top = 16.dp)
                                 .width(260.dp),
                             shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_2))
+                            colors = ButtonDefaults.buttonColors(containerColor = LightPurple)
                         ) {
                             Text("Gerar Material Didático")
                         }
@@ -421,7 +419,7 @@ fun PreviewOutlined(){
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = colorResource(id = R.color.grey_bold)
+            unfocusedBorderColor = GrayBold
         ),
         textStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte),
         modifier = Modifier

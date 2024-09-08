@@ -39,6 +39,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.educai.mock.getMockAtividades
+import com.example.educai.ui.theme.GrayBold
+import com.example.educai.ui.theme.Green
+import com.example.educai.ui.theme.LightPurple
+import com.example.educai.ui.theme.Yellow
 
 val fonte = FontFamily(
     Font(R.font.montserrat, FontWeight.Normal)
@@ -114,8 +118,8 @@ data class AtividadeData(
 
 @Composable
 fun Atividade(atividadeData: AtividadeData) {
-    val fontePequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte, color = colorResource(id = R.color.grey_bold), fontWeight = FontWeight.Bold, fontSize = 12.sp)
-    val fonteMedia = MaterialTheme.typography.bodyMedium.copy(fontFamily = fonte, color = colorResource(id = R.color.grey_bold), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+    val fontePequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+    val fonteMedia = MaterialTheme.typography.bodyMedium.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
     val fonteBoldTitulo = MaterialTheme.typography.titleMedium.copy(fontFamily = fonteBold, fontSize = 16.sp)
     val fonteBoldPequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonteSemibold, fontSize = 12.sp)
 
@@ -183,7 +187,7 @@ fun Atividade(atividadeData: AtividadeData) {
                 Text(
                     text = buildAnnotatedString {
                         append("Data publicação: ")
-                        withStyle(style = SpanStyle(color = colorResource(id = R.color.grey_bold), fontFamily = fonteBold)) {
+                        withStyle(style = SpanStyle(color = GrayBold, fontFamily = fonteBold)) {
                             append(atividadeData.datePosting)
                         }
                     },
@@ -197,7 +201,7 @@ fun Atividade(atividadeData: AtividadeData) {
                     Text(text = "Status: ", style = fontePequena)
                     Text(
                         text = if (atividadeData.hasAnswered == true) "Enviado" else "Pendente",
-                        color = if (atividadeData.hasAnswered == true) colorResource(id = R.color.green) else colorResource(id = R.color.yellow),
+                        color = if (atividadeData.hasAnswered == true) Green else Yellow,
                         style = fonteBoldPequena
                     )
                     Image(
@@ -231,7 +235,7 @@ fun TurmaViwer(modifier: Modifier = Modifier) {
             .height(80.dp)
             .border(
                 width = 2.dp,
-                color = colorResource(id = R.color.purple),
+                color = LightPurple,
                 shape = MaterialTheme.shapes.medium
             )
             .clip(MaterialTheme.shapes.medium)
