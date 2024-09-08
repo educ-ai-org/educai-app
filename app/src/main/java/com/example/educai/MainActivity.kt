@@ -20,7 +20,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            EducAITheme {
+            EducAITheme(
+                dynamicColor = false
+            ) {
                 App()
             }
         }
