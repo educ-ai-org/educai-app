@@ -70,7 +70,7 @@ fun Pessoas() {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.profileimage),
-                    contentDescription = "Coroa",
+                    contentDescription = "Foto de perfil",
                     modifier = Modifier
                         .height(18.dp)
                         .padding(end = 16.dp)
@@ -100,7 +100,7 @@ fun Pessoas() {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.profileimage),
-                    contentDescription = "Coroa",
+                    contentDescription = "Foto de perfil",
                     modifier = Modifier
                         .height(18.dp)
                         .padding(end = 16.dp)
@@ -146,7 +146,7 @@ fun Header(title: String) {
 
         Image(
             painter = painterResource(id = R.drawable.class_icon),
-            contentDescription = "Coroa",
+            contentDescription = "Icone Turma",
             modifier = Modifier
                 .height(18.dp)
                 .padding(end = 16.dp)
