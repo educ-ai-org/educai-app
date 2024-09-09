@@ -25,6 +25,7 @@ import com.example.educai.ui.theme.MediumPurple
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginForm(
+    onLoginSuccess: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -56,7 +57,7 @@ fun LoginForm(
             )
         )
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onLoginSuccess() },
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
@@ -92,5 +93,5 @@ fun LoginForm(
 @Composable
 @Preview
 fun LoginFormPreview() {
-    LoginForm()
+    LoginForm({})
 }

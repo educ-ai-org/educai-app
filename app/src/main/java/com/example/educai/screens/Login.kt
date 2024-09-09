@@ -40,7 +40,7 @@ fun Login(
                 .fillMaxHeight(0.75f)
                 .align(Alignment.BottomCenter)
         ) {
-            LoginContainer()
+            LoginContainer(onLoginSuccess)
         }
     }
 }

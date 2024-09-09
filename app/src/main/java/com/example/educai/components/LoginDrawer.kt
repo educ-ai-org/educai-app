@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.educai.R
 
 @Composable
-fun LoginContainer() {
+fun LoginContainer(onLoginSuccess: () -> Unit) {
     Column(
         modifier = Modifier
             .shadow(
@@ -52,7 +52,7 @@ fun LoginContainer() {
                 color = Color.Gray
             )
         }
-        LoginForm()
+        LoginForm(onLoginSuccess)
     }
 }
 
@@ -63,6 +63,6 @@ fun LoginContainerPreview() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LoginContainer()
+        LoginContainer({})
     }
 }
