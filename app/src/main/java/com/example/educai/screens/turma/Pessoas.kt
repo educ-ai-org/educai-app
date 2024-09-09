@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -143,14 +144,24 @@ fun Header(title: String) {
                 )
             }
     ) {
+        if(title == "Professores") {
+            Image(
+                painter = painterResource(id = R.drawable.professor_icon),
+                contentDescription = "Icone Turma",
+                modifier = Modifier
+                    .height(18.dp)
+                    .padding(end = 16.dp)
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.aluno_icon),
+                contentDescription = "Icone Turma",
+                modifier = Modifier
+                    .height(18.dp)
+                    .padding(end = 16.dp)
+            )
+        }
 
-        Image(
-            painter = painterResource(id = R.drawable.class_icon),
-            contentDescription = "Icone Turma",
-            modifier = Modifier
-                .height(18.dp)
-                .padding(end = 16.dp)
-        )
         Text(
             text = title,
             color = Color.Black,
