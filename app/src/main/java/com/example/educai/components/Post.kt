@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,21 +37,33 @@ import com.example.educai.ui.theme.MediumPurple
 fun Post() {
     val mockTitle = "Título Post"
     val mockDate = "01/09/2024"
-    val mockDescription = "Texto descritivo do professot Texto descritivo do professot Texto descritivo"
+    val mockDescription = "Texto descritivo do professor Texto descritivo do professor Texto descritivo"
     val mockFileName = "arquivo.pdf"
+
+    val borderShape = RoundedCornerShape(10.dp)
+    val roundedJustOnTop = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+    val borderStroke = BorderStroke(2.dp, LightGrey)
+
+    val fonteTitulo = TextStyle(fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
+    val fonteDescricao = TextStyle(fontSize = 16.sp, color = Color.Gray)
+    val fonteLink = TextStyle(
+        fontSize = 16.sp,
+        color = MediumPurple,
+        textDecoration = TextDecoration.Underline
+    )
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(170.dp)
-            .border(BorderStroke(1.dp, LightGrey), shape = RoundedCornerShape(10.dp))
+            .border(borderStroke, borderShape)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .border(BorderStroke(1.dp, LightGrey), shape = RoundedCornerShape(10.dp))
+                    .border(borderStroke, roundedJustOnTop)
                     .padding(8.dp)
             ) {
                 Row(
@@ -70,8 +83,7 @@ fun Post() {
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = mockTitle,
-                            fontSize = 21.sp,
-                            fontWeight = FontWeight.SemiBold
+                            style = fonteTitulo
                         )
                     }
                 }
@@ -85,27 +97,24 @@ fun Post() {
             ) {
                 Text(
                     text = "Data de publicação: $mockDate",
-                    fontSize = 16.sp,
-                    color = Color.Gray
+                    style = fonteDescricao
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = mockDescription,
-                    fontSize = 16.sp,
-                    color = Color.Gray
+                    style = fonteDescricao
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = mockFileName,
-                    fontSize = 16.sp,
-                    color = MediumPurple,
-                    modifier = Modifier.clickable { /* Chamar função para abrir o arquivo */ },
-                    style = TextStyle(textDecoration = TextDecoration.Underline)
+                    style = fonteLink,
+                    modifier = Modifier.clickable { /* Chamar função para abrir o arquivo */ }
                 )
             }
         }
     }
 }
+
 
 @Composable
 @Preview
