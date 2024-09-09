@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.educai.R
@@ -26,13 +25,8 @@ fun Login(
             .background(MediumPurple)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.image_login_bright),
-            contentDescription = "Foto do login",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.44f)
-                .align(Alignment.TopCenter)
+            painter = painterResource(id = R.drawable.login_image),
+            contentDescription = "Foto do login"
         )
         Box(
             modifier = Modifier
