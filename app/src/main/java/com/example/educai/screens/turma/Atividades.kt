@@ -3,6 +3,7 @@ package com.example.educai.screens.turma
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,9 @@ import com.example.educai.R
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.educai.mock.getMockAtividades
 import com.example.educai.ui.theme.GrayBold
 import com.example.educai.ui.theme.Green
@@ -58,6 +62,27 @@ val fonteSemibold = FontFamily(
 
 @Composable
 fun Atividades() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = "list"
+    ) {
+        composable("list") {
+            ListaAtividades {
+                navController.navigate("atividade")
+            }
+        }
+        composable("atividade") {
+            com.example.educai.screens.turma.atividade.Atividade {
+                navController.navigate("list")
+            }
+        }
+    }
+}
+
+@Composable
+fun ListaAtividades(navegarAtividade: () -> Unit) {
     var atividades by remember { mutableStateOf(listOf<AtividadeData>()) }
 
     LaunchedEffect(Unit) {
@@ -75,7 +100,12 @@ fun Atividades() {
             TurmaViwer()
         }
         items(atividades.size) { index ->
-            Atividade(atividadeData = atividades[index])
+            Box(
+                modifier = Modifier
+                    .clickable { navegarAtividade() }
+            ) {
+                Atividade(atividadeData = atividades[index])
+            }
         }
     }
 
