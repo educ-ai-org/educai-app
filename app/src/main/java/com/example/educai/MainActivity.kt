@@ -7,13 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.educai.screens.Login
 import com.example.educai.screens.MainUI
+import com.example.educai.ui.theme.BackgroundColor
 import com.example.educai.ui.theme.EducAITheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,8 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun App() {
+    setNavigationAndStatusBarColors()
+
     val navController = rememberNavController()
     val isUserLoggedIn = remember { mutableStateOf(false) }
 
@@ -47,4 +52,18 @@ fun App() {
             MainUI()
         }
     }
+}
+
+@Composable
+fun setNavigationAndStatusBarColors() {
+    val systemUiController = rememberSystemUiController()
+
+    systemUiController.setSystemBarsColor(
+        color = Color.Transparent,
+        darkIcons = false
+    )
+
+    systemUiController.setNavigationBarColor(
+        color = BackgroundColor
+    )
 }
