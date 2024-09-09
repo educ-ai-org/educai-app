@@ -278,7 +278,7 @@ fun TurmaViwer(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.class_icon2),
+                painter = painterResource(id = R.drawable.icon_turma),
                 contentDescription = "Icone Turma",
                 modifier = Modifier
                     .size(48.dp)
