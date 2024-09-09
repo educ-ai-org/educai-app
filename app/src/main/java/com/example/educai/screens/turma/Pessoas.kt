@@ -44,7 +44,7 @@ fun Pessoas() {
     val students = listOf(
         Student("Fernando Fernandes Souza", 2),
         Student("Giovanni Giorno Silva", 2),
-        Student("Algusto Ferreira Lima", 2)
+        Student("Augusto Ferreira Lima", 2)
     )
 
     val professors = listOf(
@@ -65,9 +65,9 @@ fun Pessoas() {
 
             Row(
                 modifier = Modifier
-                .height(20.dp)
-                .fillMaxWidth()
-
+                .height(32.dp)
+                .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.profileimage),
@@ -80,8 +80,7 @@ fun Pessoas() {
                 Text(
                     text = professor.name,
                     color = Color.Black,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    fontSize = 16.sp,
                 )
             }
             if (index < students.size - 1) {
@@ -95,9 +94,9 @@ fun Pessoas() {
 
             Row(
                 modifier = Modifier
-                    .height(26.dp)
-                    .fillMaxWidth()
-
+                    .height(32.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.profileimage),
@@ -110,8 +109,7 @@ fun Pessoas() {
                 Text(
                     text = student.nome,
                     color = Color.Black,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    fontSize = 16.sp,
                 )
             }
             if (index < students.size - 1) {
@@ -149,7 +147,7 @@ fun Header(title: String) {
                 painter = painterResource(id = R.drawable.professor_icon),
                 contentDescription = "Icone Turma",
                 modifier = Modifier
-                    .height(18.dp)
+                    .height(21.dp)
                     .padding(end = 16.dp)
             )
         } else {
@@ -157,7 +155,7 @@ fun Header(title: String) {
                 painter = painterResource(id = R.drawable.aluno_icon),
                 contentDescription = "Icone Turma",
                 modifier = Modifier
-                    .height(18.dp)
+                    .height(27.dp)
                     .padding(end = 16.dp)
             )
         }
