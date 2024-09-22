@@ -1,5 +1,7 @@
 package com.example.educai
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,15 +14,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.educai.data.model.ErrorResponse
 import com.example.educai.screens.Login
 import com.example.educai.screens.MainUI
 import com.example.educai.ui.theme.BackgroundColor
 import com.example.educai.ui.theme.EducAITheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.gson.Gson
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        context = applicationContext
         enableEdgeToEdge()
         setContent {
             EducAITheme(
@@ -29,6 +34,12 @@ class MainActivity : ComponentActivity() {
                 App()
             }
         }
+    }
+
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
+            private set
     }
 }
 
