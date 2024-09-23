@@ -69,7 +69,11 @@ fun LoginForm(
     errorMessage?.let {
         if(errorMessage!!.message == "Access Denied" && errorMessage!!.status == 403) {
             errorMessageText = "Email ou senha inválidos!"
+        } else {
+            errorMessageText = "Ocorreu um erro, tente novamente mais tarde!"
         }
+
+        isLoading = false
     }
 
     Column(
