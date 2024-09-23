@@ -7,13 +7,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.educai.components.Class
+import com.example.educai.data.viewmodel.UserViewModel
 
 data class Turma(
     val id: Int,
@@ -23,15 +30,16 @@ data class Turma(
 )
 
 @Composable
-fun Home(navController: NavController) {
+fun Home(
+    navController: NavController,
+    viewModel: UserViewModel = viewModel()
+) {
+    val isLoading by viewModel.isLoading.observeAsState(true)
+    val errorMessage by viewModel.errorMessage.observeAsState("")
 
-    val turmasMockadas = listOf(
-        Turma(1,"Turma 01", "Inglês", 30),
-        Turma(2,"Turma 02", "Matemática", 25),
-        Turma(3,"Turma 03", "História", 20),
-        Turma(4,"Turma 04", "Ciências", 15),
-        Turma(5,"Turma 05", "Arte", 10)
-    )
+    LaunchedEffect(Unit) {
+        viewModel.getUserClassrooms()
+    }
 
     val scrollState = rememberScrollState()
     Column(
@@ -56,11 +64,11 @@ fun Home(navController: NavController) {
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            turmasMockadas.forEach { turma ->
+            viewModel.classrooms.value.forEach { turma ->
                 Class(
-                    nomeTurma = turma.nome,
-                    nomeDisciplina = turma.disciplina,
-                    quantidadeAlunos = turma.numeroDeAlunos,
+                    nomeTurma = turma.title,
+                    nomeDisciplina = turma.course,
+                    quantidadeAlunos = turma.studentsCount,
                     onClick = {
                         navController.navigate("turmaExemplo")
                         //navController.navigate("detalhesTurma/${turma.id}")
