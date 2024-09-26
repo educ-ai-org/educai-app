@@ -1,5 +1,6 @@
 package com.example.educai.routes
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,7 +11,7 @@ import com.example.educai.screens.turma.Pessoas
 import com.example.educai.screens.turma.Posts
 
 @Composable
-fun BottomScreensNavigation(navController: NavHostController) {
+fun BottomScreensNavigation(navController: NavHostController, idTurma: String) {
     NavHost(
         navController = navController,
         startDestination = BottomNavigationScreens.Posts.route
@@ -25,7 +26,8 @@ fun BottomScreensNavigation(navController: NavHostController) {
             Pessoas()
         }
         composable(BottomNavigationScreens.Leaderboard.route) {
-            Leaderboard()
+            Leaderboard(idTurma)
+            Log.d("Leaderboard", "idTurma recebido: $idTurma")
         }
     }
 }

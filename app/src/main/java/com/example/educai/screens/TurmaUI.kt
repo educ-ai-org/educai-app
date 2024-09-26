@@ -27,7 +27,7 @@ import com.example.educai.ui.theme.TabBarColor
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TurmaUI() {
+fun TurmaUI(id: String) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -49,7 +49,7 @@ fun TurmaUI() {
                 .padding(0.dp)
                 .background(BackgroundColor)
         ) {
-            BottomScreensNavigation(navController = navController)
+            BottomScreensNavigation(navController = navController, id)
         }
     }
 }
