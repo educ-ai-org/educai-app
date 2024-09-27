@@ -7,19 +7,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,9 +30,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +49,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.R
+import com.example.educai.data.viewmodel.DictionaryViewModel
 import com.example.educai.ui.theme.ButtonPurple
 import com.example.educai.ui.theme.LightGrey
 import com.example.educai.ui.theme.Lilac
@@ -57,10 +62,20 @@ import com.example.educai.ui.theme.TextColor
 import com.example.educai.ui.theme.montserratFontFamily
 
 @Composable
-fun DictionaryModal(showModal: Boolean, onDismiss: () -> Unit) {
+fun DictionaryModal(
+    showModal: Boolean,
+    onDismiss: () -> Unit,
+    viewModel: DictionaryViewModel = viewModel()
+) {
 
     if (!showModal) return
+
+    var word by remember { mutableStateOf("") }
     var searchedWord by remember { mutableStateOf("") }
+    var isWordSearched by remember { mutableStateOf(false) }
+
+    val wordDefinition by viewModel.wordDefinition.observeAsState()
+    val error by viewModel.errorMessage.observeAsState()
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -80,10 +95,11 @@ fun DictionaryModal(showModal: Boolean, onDismiss: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(Lilac)
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Lilac)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.dicionario_preto_icone),
@@ -121,15 +137,15 @@ fun DictionaryModal(showModal: Boolean, onDismiss: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
                     OutlinedTextField(
-                        value = searchedWord,
-                        onValueChange = { searchedWord = it },
+                        value = word,
+                        onValueChange = { word = it },
 //                        label = { Text("Ex: Word", color = MediumGrey, fontSize = 14.sp, fontWeight = FontWeight.Medium) },
                         shape = RoundedCornerShape(8.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -150,7 +166,13 @@ fun DictionaryModal(showModal: Boolean, onDismiss: () -> Unit) {
                     )
 
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            if (word.isNotEmpty()) {
+                                viewModel.getWordDefinition(word)
+                                searchedWord = word
+                                isWordSearched = true
+                            }
+                        },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = ButtonPurple,
                             contentColor = Color.White
@@ -167,43 +189,67 @@ fun DictionaryModal(showModal: Boolean, onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // Search Result
-                Row (
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
+                if (isWordSearched) {
+                    if (wordDefinition != null) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
 
-                    Text(
-                        text = "Test",
-                        color = TextColor,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = montserratFontFamily
-                    )
+                            Text(
+                                text = searchedWord.lowercase(),
+                                color = TextColor,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = montserratFontFamily
+                            )
 
-                    IconButton(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .size(33.dp)
-                            .padding(start = 12.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.audio_icone),
-                            contentDescription = "Volume",
-                            tint = MediumPurple,
-                            modifier = Modifier.fillMaxSize()
+                            IconButton(
+                                onClick = { /* Reproduzir áudio */ },
+                                modifier = Modifier
+                                    .size(33.dp)
+                                    .padding(start = 12.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.audio_icone),
+                                    contentDescription = "Volume",
+                                    tint = MediumPurple,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+
+                        }
+
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.5f)
+                        ) {
+                            items(wordDefinition!!.meanings) { meaning ->
+                                Text(
+                                    text = meaning.definitions.joinToString("\n "),
+                                    fontSize = 14.sp,
+                                    fontFamily = montserratFontFamily,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                    } else if (error != null) {
+                        Text(
+                            text = error!!.error,
+                            color = Color.Red,
+                            fontSize = 14.sp,
+                            fontFamily = montserratFontFamily,
+                            fontWeight = FontWeight.Bold
                         )
+                    } else {
+                        CircularProgressIndicator()
                     }
-
                 }
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Text(
-                    text = "a way of discovering,by questions or practical activities.",
-                    fontSize = 14.sp,
-                    fontFamily = montserratFontFamily,
-                    fontWeight = FontWeight.Bold)
 
             }
         }
@@ -211,7 +257,7 @@ fun DictionaryModal(showModal: Boolean, onDismiss: () -> Unit) {
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun DictionaryModalPreview() {
     DictionaryModal(showModal = true, onDismiss = {})
