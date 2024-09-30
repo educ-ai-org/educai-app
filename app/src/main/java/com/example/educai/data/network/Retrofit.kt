@@ -3,6 +3,7 @@ package com.example.educai.data.network
 import com.example.educai.MainActivity
 import com.example.educai.data.contexts.TokenManager
 import com.example.educai.data.services.AuthService
+import com.example.educai.data.services.DictionaryService
 import com.example.educai.data.services.UserService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -47,4 +48,9 @@ object RetrofitInstance {
     val userService: UserService by lazy {
         retrofit.create(UserService::class.java)
     }
+
+    val dictionaryService: DictionaryService by lazy {
+        retrofit.create(DictionaryService::class.java)
+    }
+
 }
