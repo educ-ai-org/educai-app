@@ -4,11 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -29,8 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.data.contexts.TokenManager
 import com.example.educai.data.model.LoginRequest
 import com.example.educai.data.viewmodel.AuthViewModel
-import com.example.educai.ui.theme.MediumPurple
-import com.example.educai.ui.theme.montserratFontFamily
 
 @Composable
 fun LoginForm(
