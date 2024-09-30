@@ -22,12 +22,14 @@ sealed class DrawerScreens (
         icon = Icons.Outlined.Home,
         textColor = TextColor
     )
-    data object TurmasExemplo: DrawerScreens(
+    data object DetalhesTurma: DrawerScreens(
         title = "Turma de Inglês",
-        route = "turmaExemplo",
+        route = "turmaDetalhes/{turmaId}",
         icon = Icons.AutoMirrored.Filled.List,
         textColor = TextColor
-    )
+    ) {
+        fun createRoute(turmaId: String) = "turmaDetalhes/$turmaId"
+    }
     data object CriarMaterial: DrawerScreens(
         title = "Criar Material",
         route = "criarMaterial",

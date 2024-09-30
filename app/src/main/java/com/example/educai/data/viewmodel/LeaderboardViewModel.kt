@@ -1,39 +1,39 @@
 package com.example.educai.data.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.educai.data.model.Classroom
 import com.example.educai.data.model.ErrorResponse
+import com.example.educai.data.model.Leaderboard
 import com.example.educai.data.network.RetrofitInstance
 import com.example.educai.utils.getErrorMessageFromJson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserViewModel : ViewModel() {
-    var classrooms = mutableStateOf<List<Classroom>>(emptyList())
+class LeaderboardViewModel : ViewModel() {
+    var leaderboard = mutableStateOf<List<Leaderboard>>(emptyList())
         private set
     val errorMessage = MutableLiveData<ErrorResponse>()
-    val isLoading = MutableLiveData<Boolean>()
+    var isLoading = mutableStateOf(false)
 
-    fun getUserClassrooms() {
+    fun getLeaderboard(classroomId: String) {
         isLoading.value = true
 
-        val call = RetrofitInstance.userService.getUserClassrooms()
+        val call = RetrofitInstance.leaderboardService.getLeaderboard(classroomId)
 
-        call.enqueue(object : Callback<List<Classroom>> {
-            override fun onResponse(call: Call<List<Classroom>>, response: Response<List<Classroom>>) {
+        call.enqueue(object : Callback<List<Leaderboard>> {
+            override fun onResponse(call: Call<List<Leaderboard>>, response: Response<List<Leaderboard>>) {
                 if (response.isSuccessful) {
-                    classrooms.value = response.body() ?: emptyList()
+                    leaderboard.value = response.body() ?: emptyList()
                 } else {
                     errorMessage.postValue(response.errorBody()?.string()?.getErrorMessageFromJson())
                 }
-
                 isLoading.value = false
             }
 
-            override fun onFailure(call: Call<List<Classroom>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Leaderboard>>, t: Throwable) {
                 errorMessage.postValue(t.message.toString().getErrorMessageFromJson())
                 isLoading.value = false
             }

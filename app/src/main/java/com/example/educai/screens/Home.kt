@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.educai.components.Class
 import com.example.educai.data.viewmodel.UserViewModel
+import com.example.educai.routes.DrawerScreens
 
 data class Turma(
     val id: Int,
@@ -70,8 +71,7 @@ fun Home(
                     nomeDisciplina = turma.course,
                     quantidadeAlunos = turma.studentsCount,
                     onClick = {
-                        navController.navigate("turmaExemplo")
-                        //navController.navigate("detalhesTurma/${turma.id}")
+                        navController.navigate(DrawerScreens.DetalhesTurma.createRoute(turma.id))
                     }
                 )
             }
