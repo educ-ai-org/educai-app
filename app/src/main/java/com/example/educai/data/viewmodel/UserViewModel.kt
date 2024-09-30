@@ -8,7 +8,6 @@ import com.example.educai.data.model.ErrorResponse
 import com.example.educai.data.model.Participant
 import com.example.educai.data.network.RetrofitInstance
 import com.example.educai.utils.getErrorMessageFromJson
-import com.example.educai.utils.getObjectFromJson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

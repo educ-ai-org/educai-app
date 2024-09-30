@@ -3,6 +3,7 @@ package com.example.educai.data.network
 import com.example.educai.MainActivity
 import com.example.educai.data.contexts.TokenManager
 import com.example.educai.data.services.AuthService
+import com.example.educai.data.services.LeaderboardService
 import com.example.educai.data.services.IAService
 import com.example.educai.data.services.DictionaryService
 import com.example.educai.data.services.UserService
@@ -58,6 +59,10 @@ object RetrofitInstance {
         retrofit.create(UserService::class.java)
     }
 
+    val leaderboardService: LeaderboardService by lazy {
+        retrofit.create(LeaderboardService::class.java)
+    }
+
     val iaService: IAService by lazy {
         retrofitIA.create(IAService::class.java)
     }
@@ -66,3 +71,4 @@ object RetrofitInstance {
         retrofit.create(DictionaryService::class.java)
     }   
 }
+

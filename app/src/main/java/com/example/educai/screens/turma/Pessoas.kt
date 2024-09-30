@@ -35,6 +35,10 @@ data class Professor(
     val name: String
 )
 
+data class Student(
+    val nome: String
+)
+
 @Preview(showBackground = true)
 @Composable
 fun Pessoas(
@@ -48,9 +52,9 @@ fun Pessoas(
     }
 
     val students = listOf(
-        Student("Fernando Fernandes Souza", 2),
-        Student("Giovanni Giorno Silva", 2),
-        Student("Augusto Ferreira Lima", 2)
+        Student("Fernando Fernandes Souza"),
+        Student("Giovanni Giorno Silva"),
+        Student("Augusto Ferreira Lima")
     )
 
     val professors = listOf(
