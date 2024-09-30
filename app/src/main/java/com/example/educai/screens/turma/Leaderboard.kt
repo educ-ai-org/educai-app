@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -81,11 +82,14 @@ fun Leaderboard(idTurma: String,
                 .padding(16.dp)
         ) {
             itemsIndexed(viewModel.leaderboard.value) { index, student ->
-                StudentRanking(
-                    posicao = index + 1,
-                    nome = student.name,
-                    pontos = student.score
-                )
+                Column {
+                    StudentRanking(
+                        posicao = index + 1,
+                        nome = student.name,
+                        pontos = student.score
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
 
