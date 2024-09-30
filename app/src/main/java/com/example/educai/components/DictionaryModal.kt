@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -72,7 +73,8 @@ fun DictionaryModal(
 
     var word by remember { mutableStateOf("") }
     var searchedWord by remember { mutableStateOf("") }
-    var isWordSearched by remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.observeAsState(false)
+
 
     val wordDefinition by viewModel.wordDefinition.observeAsState()
     val error by viewModel.errorMessage.observeAsState()
@@ -146,7 +148,9 @@ fun DictionaryModal(
                     OutlinedTextField(
                         value = word,
                         onValueChange = { word = it },
-//                        label = { Text("Ex: Word", color = MediumGrey, fontSize = 14.sp, fontWeight = FontWeight.Medium) },
+                        placeholder = {
+                            Text("Ex: Word", color = MediumGrey, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                        },
                         shape = RoundedCornerShape(8.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = LightGrey,
@@ -155,7 +159,7 @@ fun DictionaryModal(
                         ),
                         modifier = Modifier
                             .fillMaxWidth(0.58f)
-                            .height(50.dp),
+                            .height(60.dp),
                         singleLine = true,
                         maxLines = 1,
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -170,7 +174,6 @@ fun DictionaryModal(
                             if (word.isNotEmpty()) {
                                 viewModel.getWordDefinition(word)
                                 searchedWord = word
-                                isWordSearched = true
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -179,7 +182,7 @@ fun DictionaryModal(
                         ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
-                            .height(50.dp)
+                            .height(60.dp)
                     ) {
                         Text(text = "Buscar")
                     }
@@ -189,7 +192,12 @@ fun DictionaryModal(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // Search Result
-                if (isWordSearched) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                    )
+                } else {
                     if (wordDefinition != null) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -228,26 +236,24 @@ fun DictionaryModal(
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.5f)
                         ) {
-                            items(wordDefinition!!.meanings) { meaning ->
+                            itemsIndexed(wordDefinition!!.meanings) { index, meaning ->
                                 Text(
-                                    text = meaning.definitions.joinToString("\n "),
+                                    text = "${index + 1}. ${meaning.definitions.joinToString("\n")}",
                                     fontSize = 14.sp,
                                     fontFamily = montserratFontFamily,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Medium
                                 )
                             }
                         }
 
                     } else if (error != null) {
                         Text(
-                            text = error!!.error,
+                            text = "Ops! Ocorreu um erro ao buscar no dicionário, verifique a palavra e tente novamente",
                             color = Color.Red,
                             fontSize = 14.sp,
                             fontFamily = montserratFontFamily,
                             fontWeight = FontWeight.Bold
                         )
-                    } else {
-                        CircularProgressIndicator()
                     }
                 }
 
