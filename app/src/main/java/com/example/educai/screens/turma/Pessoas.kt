@@ -1,23 +1,20 @@
 package com.example.educai.screens.turma
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,30 +27,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.R
-import com.example.educai.components.StudentRanking
-import com.example.educai.ui.theme.LightPurple
+import com.example.educai.data.model.Participant
+import com.example.educai.data.viewmodel.UserViewModel
 
-data class Professor(
-    val name: String
-)
-
-data class Student(
-    val nome: String
-)
-
-@Preview(showBackground = true)
 @Composable
-fun Pessoas() {
-    val students = listOf(
-        Student("Fernando Fernandes Souza"),
-        Student("Giovanni Giorno Silva"),
-        Student("Augusto Ferreira Lima")
-    )
+fun Pessoas(
+    viewModel: UserViewModel = viewModel(),
+    classRoomId: String
+) {
+    val isLoading by viewModel.isLoading.observeAsState(true)
+    val errorMessage by viewModel.errorMessage.observeAsState("")
 
-    val professors = listOf(
-        Professor("Rafael Rodriguez Ribeiro")
-    )
+    LaunchedEffect(Unit) {
+        viewModel.getParticipantsByClassId(classRoomId)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,40 +51,24 @@ fun Pessoas() {
             .padding(16.dp)
 
     ) {
-
         Header("Professores")
 
-        professors.forEachIndexed { index, professor ->
-
-            Row(
-                modifier = Modifier
-                .height(32.dp)
-                .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.profileimage),
-                    contentDescription = "Foto de perfil",
-                    modifier = Modifier
-                        .height(18.dp)
-                        .padding(end = 16.dp)
-                        .clip(RoundedCornerShape(50.dp))
-                )
-                Text(
-                    text = professor.name,
-                    color = Color.Black,
-                    fontSize = 16.sp,
-                )
-            }
-            if (index < students.size - 1) {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
+        ParticipantRow(viewModel = viewModel, role = "TEACHER")
 
         Header("Alunos")
 
-        students.forEachIndexed { index, student ->
+        ParticipantRow(viewModel = viewModel, role = "STUDENT")
+    }
+}
 
+@Composable
+fun ParticipantRow(
+    viewModel: UserViewModel,
+    role: String
+) {
+    viewModel.participants.value.forEach {
+        participant ->
+        if(participant.role == role){
             Row(
                 modifier = Modifier
                     .height(32.dp)
@@ -111,20 +84,20 @@ fun Pessoas() {
                         .clip(RoundedCornerShape(50.dp))
                 )
                 Text(
-                    text = student.nome,
+                    text = participant.name,
                     color = Color.Black,
                     fontSize = 16.sp,
                 )
             }
-            if (index < students.size - 1) {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+        } else {
+            println(participant)
         }
     }
 }
 
+
 @Composable
-fun Header(title: String) {
+fun Header(role: String) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +119,7 @@ fun Header(title: String) {
                 )
             }
     ) {
-        if(title == "Professores") {
+        if(role == "Professores") {
             Image(
                 painter = painterResource(id = R.drawable.professor_icon),
                 contentDescription = "Icone Turma",
@@ -165,7 +138,7 @@ fun Header(title: String) {
         }
 
         Text(
-            text = title,
+            text = role,
             color = Color.Black,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
