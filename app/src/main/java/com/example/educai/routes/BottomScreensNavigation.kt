@@ -23,7 +23,7 @@ fun BottomScreensNavigation(navController: NavHostController, idTurma: String) {
             Atividades()
         }
         composable(BottomNavigationScreens.Pessoas.route) {
-            Pessoas()
+            Pessoas(classRoomId = idTurma)
         }
         composable(BottomNavigationScreens.Leaderboard.route) {
             Leaderboard(idTurma)

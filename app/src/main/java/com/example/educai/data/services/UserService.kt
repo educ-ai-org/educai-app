@@ -13,6 +13,6 @@ interface UserService {
     @GET("user/classrooms")
     fun getUserClassrooms(): Call<List<Classroom>>
 
-    @GET("classroom/{classroomId}")
+    @GET("classroom/{classroomId}/participants")
     fun getParticipantsByClassId(@Path("classroomId") classroomId: String): Call<List<Participant>>
 }
