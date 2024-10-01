@@ -2,36 +2,37 @@ package com.example.educai.routes
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import com.example.educai.R
 
-sealed class BottomNavigationScreens (
+sealed class BottomNavigationScreens(
     val title: String,
     val route: String,
-    val icon: ImageVector
+    val icon: Int
 ) {
     data object Posts: BottomNavigationScreens(
         title = "Posts",
         route = "posts",
-        icon = Icons.AutoMirrored.Outlined.Send
+        icon =  R.drawable.icon_post
     )
     data object Atividades: BottomNavigationScreens(
         title = "Atividades",
         route = "atividades",
-        icon = Icons.AutoMirrored.Filled.List
+        icon = R.drawable.icon_atividades
     )
     data object Pessoas: BottomNavigationScreens(
         title = "Pessoas",
         route = "pessoas",
-        icon = Icons.Default.AccountCircle
+        icon = R.drawable.icon_peoples
     )
     data object Leaderboard: BottomNavigationScreens(
         title = "Leaderboard",
         route = "leaderboard",
-        icon = Icons.Default.KeyboardArrowUp
+        icon = R.drawable.icon_ranking
     )
 }
 

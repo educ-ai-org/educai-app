@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -48,7 +49,7 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavigationScreensList.forEachIndexed { index, item ->
             NavigationBarItem(
                 alwaysShowLabel = true,
-                icon = { Icon(item.icon, contentDescription = item.title) },
+                icon = { Icon(painter = painterResource(id = item.icon), contentDescription = item.title, modifier = Modifier.height(24.dp)) },
                 label = {
                     Text(
                         item.title,
