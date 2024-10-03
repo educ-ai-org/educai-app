@@ -24,7 +24,7 @@ fun Revisao() {
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        CardAtividade(name = "Atividade 1", endDate = LocalDate.now())
+        CardAtividade(name = "Atividade 1", endDate = "20/11/2024")
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -35,8 +35,8 @@ fun Revisao() {
                 .fillMaxSize()
         ) {
             list.forEach {
-                Question()
-
+//                Question()
+//
                 Spacer(modifier = Modifier.height(16.dp))
             }
 

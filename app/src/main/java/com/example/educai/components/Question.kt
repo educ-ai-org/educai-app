@@ -5,16 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,22 +21,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.educai.data.model.AnsweredQuestion
+import com.example.educai.data.model.Question
 import com.example.educai.ui.theme.LightGrey
 import com.example.educai.ui.theme.MediumPurple
 
 @Composable
-fun Question() {
-    val name = "Question 1"
-    val description = "1 - O que é o verb to be?"
-    val options: List<Options> = listOf<Options>(
-        Options("Opção 1", false),
-        Options("Opção 2", false),
-        Options("Opção 3", false),
-        Options("Opção 4", false),
-    )
+fun Question(question: Question, index: Int, changeQuestionOption: (AnsweredQuestion) -> Unit) {
+    val name = "Questão ${index + 1}"
 
     var selectedOption by remember {
-        mutableStateOf(-1)
+        mutableIntStateOf(-1)
     }
 
     Column(
@@ -61,7 +53,7 @@ fun Question() {
             )
 
             Text(
-                text = description,
+                text = question.description,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
@@ -71,7 +63,7 @@ fun Question() {
             )
         }
 
-        options.forEachIndexed { index, option ->
+        question.options.forEachIndexed { index, option ->
             Row(
                 modifier = Modifier
                     .padding(vertical = 6.dp)
@@ -81,7 +73,13 @@ fun Question() {
             ) {
                 RadioButton(
                     selected = selectedOption == index,
-                    onClick = { selectedOption = index },
+                    onClick = {
+                        selectedOption = index
+                        changeQuestionOption(AnsweredQuestion(
+                            optionKey = option.key,
+                            questionId = question.id
+                        ))
+                    },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MediumPurple
                     )
@@ -95,7 +93,7 @@ fun Question() {
 @Preview(showBackground = true)
 @Composable
 fun QuestionPreview() {
-    Question()
+//    Question()
 }
 
 data class Options(

@@ -11,17 +11,27 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.components.CardAtividade
 import com.example.educai.components.DefaultButton
 import com.example.educai.components.Question
+import com.example.educai.data.viewmodel.ClassworkViewModel
 import java.time.LocalDate
 
 @Composable
 fun Atividade(voltar: () -> Unit) {
+    val id = "66776e3fa1bc74153a5c5a60";
+
+    val viewModel: ClassworkViewModel = viewModel()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getClasswork(id)
+    }
 
     Column(
         modifier = Modifier
@@ -32,20 +42,22 @@ fun Atividade(voltar: () -> Unit) {
             modifier = Modifier
                 .clickable { voltar() }
         ) {
-            CardAtividade(name = "Atividade 1", endDate = LocalDate.now())
+            CardAtividade(name = viewModel.classwork.value?.title, endDate = viewModel.classwork.value?.endDate)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        val list = List(5) {}
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            list.forEach { _ ->
-                Question()
+            viewModel.classwork.value?.questions?.forEachIndexed { index, question ->
+                Question(
+                    question = question,
+                    index = index,
+                    changeQuestionOption = { viewModel.changeQuestionAnswer(it) }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
