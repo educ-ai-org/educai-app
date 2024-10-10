@@ -24,10 +24,16 @@ import androidx.compose.ui.unit.sp
 import com.example.educai.data.model.AnsweredQuestion
 import com.example.educai.data.model.Question
 import com.example.educai.ui.theme.LightGrey
+import com.example.educai.ui.theme.MediumGrey
 import com.example.educai.ui.theme.MediumPurple
 
 @Composable
-fun Question(question: Question, index: Int, changeQuestionOption: (AnsweredQuestion) -> Unit) {
+fun Question(
+    question: Question,
+    index: Int,
+    changeQuestionOption: ((AnsweredQuestion) -> Unit)? = null,
+    studentAnswer: AnsweredQuestion? = null
+) {
     val name = "Questão ${index + 1}"
 
     var selectedOption by remember {
@@ -72,17 +78,28 @@ fun Question(question: Question, index: Int, changeQuestionOption: (AnsweredQues
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = selectedOption == index,
+                    selected = if (studentAnswer == null) {
+                        selectedOption == index
+                    } else {
+                        option.key == studentAnswer.optionKey
+                    },
                     onClick = {
                         selectedOption = index
-                        changeQuestionOption(AnsweredQuestion(
-                            optionKey = option.key,
-                            questionId = question.id
-                        ))
+                        if (changeQuestionOption != null) {
+                            changeQuestionOption(AnsweredQuestion(
+                                optionKey = option.key,
+                                questionId = question.id
+                            ))
+                        }
                     },
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = MediumPurple
-                    )
+                        selectedColor = if(studentAnswer == null) {
+                            MediumPurple
+                        } else {
+                            MediumGrey
+                        },
+                    ),
+                    enabled = studentAnswer !== null
                 )
                 Text(text = option.description)
             }

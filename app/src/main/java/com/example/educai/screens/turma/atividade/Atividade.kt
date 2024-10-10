@@ -1,5 +1,6 @@
 package com.example.educai.screens.turma.atividade
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.educai.MainActivity
 import com.example.educai.components.CardAtividade
 import com.example.educai.components.DefaultButton
 import com.example.educai.components.Question
@@ -65,7 +67,7 @@ fun Atividade(voltar: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             DefaultButton(text = "Enviar") {
-
+                viewModel.sendClasswork(id)
             }
         }
     }

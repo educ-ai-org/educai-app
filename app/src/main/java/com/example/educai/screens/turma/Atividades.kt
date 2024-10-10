@@ -74,7 +74,7 @@ fun Atividades() {
             }
         }
         composable("atividade") {
-            com.example.educai.screens.turma.atividade.Atividade {
+            com.example.educai.screens.turma.atividade.Revisao {
                 navController.navigate("list")
             }
         }
