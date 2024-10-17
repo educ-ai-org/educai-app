@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
-fun CardAtividade(name: String, endDate: LocalDate) {
+fun CardAtividade(name: String?, endDate: String?) {
     Row(
         modifier = Modifier
             .border(1.dp, MediumPurple, shape = RoundedCornerShape(10.dp))
@@ -49,17 +49,19 @@ fun CardAtividade(name: String, endDate: LocalDate) {
                 ),
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = name,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
+            if(name != null && endDate != null) {
+                Text(
+                    text = name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Text(
-                text = endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal
-            )
+                Text(
+                    text = endDate,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            }
         }
     }
 }
@@ -67,5 +69,5 @@ fun CardAtividade(name: String, endDate: LocalDate) {
 @Preview(showBackground = true)
 @Composable
 fun CardAtividadePreview() {
-    CardAtividade(name = "Atividade 1", endDate = LocalDate.now())
+    CardAtividade(name = "Atividade 1", endDate = "24/07/24")
 }
