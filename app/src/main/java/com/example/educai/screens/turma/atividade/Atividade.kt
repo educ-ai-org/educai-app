@@ -1,6 +1,7 @@
 package com.example.educai.screens.turma.atividade
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,9 +27,7 @@ import com.example.educai.data.viewmodel.ClassworkViewModel
 import java.time.LocalDate
 
 @Composable
-fun Atividade(voltar: () -> Unit) {
-    val id = "66776e3fa1bc74153a5c5a60";
-
+fun Atividade(id: String, voltar: () -> Unit, goToReview: (id: String) -> Unit) {
     val viewModel: ClassworkViewModel = viewModel()
     val scrollState = rememberScrollState()
 
@@ -52,6 +52,7 @@ fun Atividade(voltar: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 64.dp)
                 .verticalScroll(scrollState)
         ) {
             viewModel.classwork.value?.questions?.forEachIndexed { index, question ->
@@ -64,17 +65,19 @@ fun Atividade(voltar: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            DefaultButton(text = "Enviar") {
-                viewModel.sendClasswork(id)
+            DefaultButton(
+                text = "Enviar",
+                isLoading = viewModel.isLoading.value,
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+            ) {
+                viewModel.sendClasswork(
+                    classworkId = id,
+                    successCallback = { goToReview(id) }
+                )
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AtividadePreview() {
-    Atividade({})
 }

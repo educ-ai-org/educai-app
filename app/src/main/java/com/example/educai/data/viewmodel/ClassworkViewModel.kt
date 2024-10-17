@@ -2,6 +2,7 @@ package com.example.educai.data.viewmodel
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.educai.MainActivity
@@ -22,6 +23,7 @@ class ClassworkViewModel: ViewModel() {
     var questionsAnswers: MutableList<AnsweredQuestion> = mutableListOf()
 
     val classworkReview = MutableLiveData<ClassworkReview>()
+    var isLoading = mutableStateOf(false)
 
     fun getClasswork(classworkId: String) {
         val call = RetrofitInstance.classworkService.getClassworkById(classworkId)
@@ -63,7 +65,9 @@ class ClassworkViewModel: ViewModel() {
         }
     }
 
-    fun sendClasswork(classworkId: String) {
+    fun sendClasswork(classworkId: String, successCallback: () -> Unit) {
+        isLoading.value = true
+
         if(questionsAnswers.size != classwork.value?.questions?.size) {
             return Toast.makeText(MainActivity.context, "É necessário responder todas as questões", Toast.LENGTH_SHORT).show()
         }
@@ -83,14 +87,17 @@ class ClassworkViewModel: ViewModel() {
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                isLoading.value = false
+
                 if(response.isSuccessful) {
-                    return Toast.makeText(MainActivity.context, "Atividade enviada!", Toast.LENGTH_SHORT).show()
+                    return successCallback()
                 }
 
                 Toast.makeText(MainActivity.context, "Não foi possível enviar a atividade, tente novamente mais tarde", Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                isLoading.value = false
                 Toast.makeText(MainActivity.context, "Não foi possível enviar a atividade, tente novamente mais tarde", Toast.LENGTH_SHORT).show()
             }
         })

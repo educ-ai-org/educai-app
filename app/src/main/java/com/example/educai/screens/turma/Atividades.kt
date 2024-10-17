@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.educai.R
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
@@ -69,20 +68,37 @@ fun Atividades() {
         startDestination = "list"
     ) {
         composable("list") {
-            ListaAtividades {
-                navController.navigate("atividade")
+            ListaAtividades(
+                navegarAtividade = { navController.navigate("atividade/$it") }
+            )
+        }
+        composable("atividade/{classworkId}") { backStackEntry ->
+            val classworkId = backStackEntry.arguments?.getString("classworkId")
+
+            if (classworkId != null) {
+                com.example.educai.screens.turma.atividade.Atividade(
+                    id = classworkId,
+                    voltar = { navController.navigate("list") },
+                    goToReview = { navController.navigate("review/$it") }
+                )
             }
         }
-        composable("atividade") {
-            com.example.educai.screens.turma.atividade.Revisao {
-                navController.navigate("list")
+        composable("review/{classworkId}") { backStackEntry ->
+            val classworkId = backStackEntry.arguments?.getString("classworkId")
+
+            if (classworkId != null) {
+                com.example.educai.screens.turma.atividade.Revisao(
+                    id = classworkId,
+                    voltar = { navController.navigate("list") }
+                )
             }
         }
     }
 }
 
+
 @Composable
-fun ListaAtividades(navegarAtividade: () -> Unit) {
+fun ListaAtividades(navegarAtividade: (id: String) -> Unit) {
     var atividades by remember { mutableStateOf(listOf<AtividadeData>()) }
 
     LaunchedEffect(Unit) {
@@ -102,7 +118,7 @@ fun ListaAtividades(navegarAtividade: () -> Unit) {
         items(atividades.size) { index ->
             Box(
                 modifier = Modifier
-                    .clickable { navegarAtividade() }
+                    .clickable { navegarAtividade(atividades[index].id) }
             ) {
                 Atividade(atividadeData = atividades[index])
             }
@@ -134,7 +150,7 @@ data class Question(
 )
 
 data class AtividadeData(
-    val id: String? = null,
+    val id: String = "67107360149e53697b69ec01",
     val title: String,
     val datePosting: String,
     val endDate: String,

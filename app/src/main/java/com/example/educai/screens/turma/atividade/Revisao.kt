@@ -22,9 +22,7 @@ import com.example.educai.data.viewmodel.ClassworkViewModel
 import java.time.LocalDate
 
 @Composable
-fun Revisao(voltar: () -> Unit) {
-    val id = "66776e3fa1bc74153a5c5a60";
-
+fun Revisao(id: String, voltar: () -> Unit) {
     val viewModel: ClassworkViewModel = viewModel()
     val scrollState = rememberScrollState()
 
@@ -49,6 +47,7 @@ fun Revisao(voltar: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 64.dp)
                 .verticalScroll(scrollState)
         ) {
             viewModel.classworkReview.value?.classwork?.questions?.forEachIndexed { index, question ->
@@ -64,6 +63,13 @@ fun Revisao(voltar: () -> Unit) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            DefaultButton(
+                text = "Voltar",
+                modifier = Modifier
+                    .padding(bottom = 24.dp),
+                onClick = { voltar() }
+            )
         }
     }
 }
