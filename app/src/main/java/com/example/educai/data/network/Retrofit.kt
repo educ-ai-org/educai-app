@@ -3,6 +3,7 @@ package com.example.educai.data.network
 import com.example.educai.MainActivity
 import com.example.educai.data.contexts.TokenManager
 import com.example.educai.data.services.AuthService
+import com.example.educai.data.services.ClassworksService
 import com.example.educai.data.services.LeaderboardService
 import com.example.educai.data.services.IAService
 import com.example.educai.data.services.DictionaryService
@@ -69,6 +70,10 @@ object RetrofitInstance {
     
     val dictionaryService: DictionaryService by lazy {
         retrofit.create(DictionaryService::class.java)
-    }   
+    }
+
+    val classworkService by lazy {
+        retrofit.create(ClassworksService::class.java)
+    }
 }
 

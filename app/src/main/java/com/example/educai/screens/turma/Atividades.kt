@@ -1,5 +1,6 @@
 package com.example.educai.screens.turma
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,10 +41,16 @@ import com.example.educai.R
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.educai.mock.getMockAtividades
+import com.example.educai.components.Question
+import com.example.educai.data.model.Classwork
+import com.example.educai.data.model.Option
+import com.example.educai.data.model.Question
+import com.example.educai.data.viewmodel.ClassworksViewModel
+import com.example.educai.data.viewmodel.LeaderboardViewModel
 import com.example.educai.ui.theme.GrayBold
 import com.example.educai.ui.theme.Green
 import com.example.educai.ui.theme.LightPurple
@@ -61,7 +69,7 @@ val fonteSemibold = FontFamily(
 )
 
 @Composable
-fun Atividades() {
+fun Atividades(idTurma: String, viewModel: ClassworksViewModel = viewModel()) {
     val navController = rememberNavController()
 
     NavHost(
@@ -69,8 +77,8 @@ fun Atividades() {
         startDestination = "list"
     ) {
         composable("list") {
-            ListaAtividades {
-                navController.navigate("atividade")
+            ListaAtividades(idTurma = idTurma, viewModel = viewModel) { turmaId ->
+                navController.navigate("atividade/$turmaId")
             }
         }
         composable("atividade") {
@@ -82,72 +90,36 @@ fun Atividades() {
 }
 
 @Composable
-fun ListaAtividades(navegarAtividade: () -> Unit) {
-    var atividades by remember { mutableStateOf(listOf<AtividadeData>()) }
+fun ListaAtividades(viewModel: ClassworksViewModel = viewModel(), idTurma: String, navegarAtividade: (String) -> Unit) {
+    val atividades by viewModel.classworks.observeAsState(emptyList())
 
     LaunchedEffect(Unit) {
-        atividades = fetchAtividadesFromDatabase()
+        viewModel.getClassworks(idTurma)
+        Log.d("Classworks", "Classworks data: ${viewModel.classworks.value}")
     }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(all = 16.dp),
-        verticalArrangement =  Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(bottom = 80.dp)
-
     ) {
-        item() {
+        item {
             TurmaViwer()
         }
         items(atividades.size) { index ->
             Box(
-                modifier = Modifier
-                    .clickable { navegarAtividade() }
+                modifier = Modifier.clickable { navegarAtividade(idTurma) }
             ) {
                 Atividade(atividadeData = atividades[index])
             }
         }
     }
-
 }
-
-
-//Adicionar suspend para funcao assincrona
-//suspend fun fetchAtividadesFromDatabase(): List<AtividadeData> {
-fun fetchAtividadesFromDatabase(): List<AtividadeData> {
-    //return withContext(Dispatchers.IO) {
-    return getMockAtividades()
-    //}
-}
-
-data class Option(
-    val id: String? = null,
-    val key: String,
-    val description: String
-)
-
-data class Question(
-    val id: String? = null,
-    val description: String,
-    val correctAnswerKey: String,
-    val options: List<Option>
-)
-
-data class AtividadeData(
-    val id: String? = null,
-    val title: String,
-    val datePosting: String,
-    val endDate: String,
-    val description: String,
-    val totalAnswers: Int? = null,
-    val totalQuestions: Int? = null,
-    val questions: List<Question>,
-    val correctPercentage: Double? = null,
-    val hasAnswered: Boolean? = null
-)
 
 @Composable
-fun Atividade(atividadeData: AtividadeData) {
+fun Atividade(atividadeData: Classwork) {
     val fontePequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
     val fonteMedia = MaterialTheme.typography.bodyMedium.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
     val fonteBoldTitulo = MaterialTheme.typography.titleMedium.copy(fontFamily = fonteBold, fontSize = 16.sp)
@@ -325,7 +297,8 @@ fun PreviewTurmaViwer() {
 @Composable
 fun PreviewAtividade() {
     Atividade(
-        atividadeData = AtividadeData(
+        atividadeData = Classwork(
+            id = "1",
             title = "Sample Activity",
             datePosting = "2023-10-01",
             endDate = "2023-10-10",
@@ -333,8 +306,28 @@ fun PreviewAtividade() {
             totalAnswers = 10,
             totalQuestions = 5,
             questions = listOf(
-                Question(id = "1", description = "Sample Question 1", correctAnswerKey = "A", options = listOf()),
-                Question(id = "2", description = "Sample Question 2", correctAnswerKey = "B", options = listOf())
+                Question(
+                    id = "1",
+                    description = "Sample Question 1",
+                    correctAnswerKey = "A",
+                    options = listOf(
+                        Option(id = "1", key = "A", description = "Option 1"),
+                        Option(id = "2", key = "B", description = "Option 2"),
+                        Option(id = "3", key = "C", description = "Option 3"),
+                        Option(id = "4", key = "D", description = "Option 4")
+                    )
+                ),
+                Question(
+                    id = "2",
+                    description = "Sample Question 2",
+                    correctAnswerKey = "B",
+                    options = listOf(
+                        Option(id = "1", key = "A", description = "Option 1"),
+                        Option(id = "2", key = "B", description = "Option 2"),
+                        Option(id = "3", key = "C", description = "Option 3"),
+                        Option(id = "4", key = "D", description = "Option 4")
+                    )
+                )
             ),
             correctPercentage = 80.0,
             hasAnswered = true
@@ -345,5 +338,5 @@ fun PreviewAtividade() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewAtividades() {
-    Atividades()
+    Atividades(idTurma = "1")
 }
