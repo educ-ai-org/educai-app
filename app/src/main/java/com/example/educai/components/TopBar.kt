@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -16,14 +18,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.educai.R
+import com.example.educai.data.viewmodel.UserViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.ui.theme.DarkPurple
 import com.example.educai.ui.theme.LightPurple
 
@@ -64,7 +74,14 @@ fun TopBar(menuOpenEvent: () -> Unit) {
 }
 
 @Composable
-fun TopBarContent() {
+fun TopBarContent(viewModel: UserViewModel = viewModel()) {
+
+    LaunchedEffect(Unit) {
+        viewModel.getUserPictureUrl()
+    }
+
+    val profilePictureUrl by viewModel.userPictureUrl.observeAsState()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,12 +106,31 @@ fun TopBarContent() {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.profileimage),
-            contentDescription = "Foto de perfil",
-            modifier = Modifier
-                .height(38.dp)
-                .clip(RoundedCornerShape(50.dp))
-        )
+
+        if (profilePictureUrl != null) {
+            Image(
+                painter = rememberAsyncImagePainter(profilePictureUrl),
+                contentDescription = "Foto de perfil",
+                modifier = Modifier
+                    .size(38.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.profileimage),
+                contentDescription = "Foto de perfil",
+                modifier = Modifier
+                    .height(38.dp)
+                    .clip(RoundedCornerShape(50.dp))
+            )
+        }
+
     }
+}
+
+@Preview
+@Composable
+fun TopBarPreview() {
+    TopBar(menuOpenEvent = {})
 }
