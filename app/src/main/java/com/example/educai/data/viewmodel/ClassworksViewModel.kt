@@ -25,7 +25,7 @@ class ClassworksViewModel : ViewModel(){
          object : Callback<List<Classwork>> {
             override fun onResponse(call: Call<List<Classwork>>, response: Response<List<Classwork>>) {
                 if (response.isSuccessful) {
-                    classworks.value = response.body() ?: emptyList()
+                    classworks.postValue(response.body() ?: emptyList())
                 } else {
                     errorMessage.postValue(response.errorBody()?.string()?.getErrorMessageFromJson())
                 }

@@ -2,12 +2,7 @@ package com.example.educai.data.network
 
 import com.example.educai.MainActivity
 import com.example.educai.data.contexts.TokenManager
-import com.example.educai.data.services.AuthService
-import com.example.educai.data.services.ClassworksService
-import com.example.educai.data.services.LeaderboardService
-import com.example.educai.data.services.IAService
-import com.example.educai.data.services.DictionaryService
-import com.example.educai.data.services.UserService
+import com.example.educai.data.services.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -22,7 +17,7 @@ object RetrofitInstance {
         val originalRequest = chain.request()
         val requestBuilder: Request.Builder = originalRequest.newBuilder()
 
-        if (!originalRequest.url().encodedPath().contains("/user/auth")) {
+        if (!originalRequest.url.encodedPath.contains("/user/auth")) {
             val token = TokenManager.getAccessToken(MainActivity.context)
             if (token != null) {
                 requestBuilder.addHeader("Authorization", "Bearer $token")
@@ -33,8 +28,11 @@ object RetrofitInstance {
         chain.proceed(request)
     }
 
+    private val loggingInterceptor = LoggingInterceptor()
+
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
+        .addInterceptor(loggingInterceptor)
         .build()
 
     private val retrofit: Retrofit by lazy {
@@ -67,7 +65,7 @@ object RetrofitInstance {
     val iaService: IAService by lazy {
         retrofitIA.create(IAService::class.java)
     }
-    
+
     val dictionaryService: DictionaryService by lazy {
         retrofit.create(DictionaryService::class.java)
     }
@@ -75,5 +73,8 @@ object RetrofitInstance {
     val classworkService by lazy {
         retrofit.create(ClassworksService::class.java)
     }
-}
 
+    val materialService by lazy {
+        retrofit.create(MaterialService::class.java)
+    }
+}
