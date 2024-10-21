@@ -24,11 +24,6 @@ import com.example.educai.R
 fun LoginContainer(onLoginSuccess: () -> Unit) {
     Column(
         modifier = Modifier
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                clip = false
-            )
             .background(Color.White, RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
     ) {
         Column(
