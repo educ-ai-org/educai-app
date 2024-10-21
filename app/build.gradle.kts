@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.security.crypto)
+    implementation(libs.coil.compose)
+    implementation(libs.squareup.converter.scalars)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

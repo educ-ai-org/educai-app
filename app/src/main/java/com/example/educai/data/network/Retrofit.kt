@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitInstance {
     private const val BASE_URL = "https://educai.eastus.cloudapp.azure.com/api/"
@@ -22,7 +23,7 @@ object RetrofitInstance {
         val originalRequest = chain.request()
         val requestBuilder: Request.Builder = originalRequest.newBuilder()
 
-        if (!originalRequest.url().encodedPath().contains("/user/auth")) {
+        if (!originalRequest.url.encodedPath.contains("/user/auth")) {
             val token = TokenManager.getAccessToken(MainActivity.context)
             if (token != null) {
                 requestBuilder.addHeader("Authorization", "Bearer $token")
@@ -45,6 +46,14 @@ object RetrofitInstance {
             .build()
     }
 
+    private val retrofitScalars: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+    }
+
     private val retrofitIA: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL_IA)
@@ -58,6 +67,10 @@ object RetrofitInstance {
 
     val userService: UserService by lazy {
         retrofit.create(UserService::class.java)
+    }
+
+    val userServiceScalars: UserService by lazy {
+        retrofitScalars.create(UserService::class.java)
     }
 
     val leaderboardService: LeaderboardService by lazy {
