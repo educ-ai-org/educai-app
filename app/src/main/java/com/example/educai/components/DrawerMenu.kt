@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -83,9 +84,11 @@ fun DrawerMenu(
                     NavigationDrawerItem(
                         icon = {
                             Icon(
+                                painter = painterResource(id = screen.icon),
+                                contentDescription = "${screen.title} icon",
                                 tint = screen.textColor,
-                                imageVector = screen.icon,
-                                contentDescription = "${screen.title} icon"
+                                modifier = Modifier
+                                    .size(28.dp)
                             )
                         },
                         label = {
@@ -119,8 +122,10 @@ fun DrawerMenu(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    painter = painterResource(id = R.drawable.icon_logout),
                     contentDescription = "Logout button",
+                    modifier = Modifier
+                        .size(24.dp),
                     tint = Color.Red
                 )
                 Text(
