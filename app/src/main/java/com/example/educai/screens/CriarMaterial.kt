@@ -36,8 +36,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import android.content.Context
-import androidx.core.net.toFile
 
 val fonteBold = FontFamily(
     Font(R.font.montserrat_bold, FontWeight.Normal)
