@@ -2,12 +2,18 @@ package com.example.educai.data.network
 
 import com.example.educai.MainActivity
 import com.example.educai.data.contexts.TokenManager
-import com.example.educai.data.services.*
+import com.example.educai.data.services.AuthService
+import com.example.educai.data.services.ClassworkService
+import com.example.educai.data.services.LeaderboardService
+import com.example.educai.data.services.IAService
+import com.example.educai.data.services.DictionaryService
+import com.example.educai.data.services.UserService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitInstance {
     private const val BASE_URL = "https://educai.eastus.cloudapp.azure.com/api/"
@@ -28,17 +34,22 @@ object RetrofitInstance {
         chain.proceed(request)
     }
 
-    private val loggingInterceptor = LoggingInterceptor()
-
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
-        .addInterceptor(loggingInterceptor)
         .build()
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+    }
+
+    private val retrofitScalars: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .client(okHttpClient)
             .build()
     }
@@ -58,6 +69,10 @@ object RetrofitInstance {
         retrofit.create(UserService::class.java)
     }
 
+    val userServiceScalars: UserService by lazy {
+        retrofitScalars.create(UserService::class.java)
+    }
+
     val leaderboardService: LeaderboardService by lazy {
         retrofit.create(LeaderboardService::class.java)
     }
@@ -65,16 +80,13 @@ object RetrofitInstance {
     val iaService: IAService by lazy {
         retrofitIA.create(IAService::class.java)
     }
-
+    
     val dictionaryService: DictionaryService by lazy {
         retrofit.create(DictionaryService::class.java)
     }
 
-    val classworkService by lazy {
-        retrofit.create(ClassworksService::class.java)
-    }
-
-    val materialService by lazy {
-        retrofit.create(MaterialService::class.java)
+    val classworkService: ClassworkService by lazy {
+        retrofit.create(ClassworkService::class.java)
     }
 }
+

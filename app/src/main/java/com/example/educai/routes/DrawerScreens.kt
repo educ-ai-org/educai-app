@@ -7,25 +7,26 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.educai.R
 import com.example.educai.ui.theme.MediumPurple
 import com.example.educai.ui.theme.TextColor
 
 sealed class DrawerScreens (
     val title: String,
     val route: String,
-    val icon: ImageVector,
+    val icon: Int,
     val textColor: Color
 ) {
     data object Home: DrawerScreens(
         title = "Início",
         route = "home",
-        icon = Icons.Outlined.Home,
+        icon = R.drawable.icon_home,
         textColor = TextColor
     )
     data object DetalhesTurma: DrawerScreens(
         title = "Turma de Inglês",
         route = "turmaDetalhes/{turmaId}",
-        icon = Icons.AutoMirrored.Filled.List,
+        icon = R.drawable.icon_classroom,
         textColor = TextColor
     ) {
         fun createRoute(turmaId: String) = "turmaDetalhes/$turmaId"
@@ -33,13 +34,13 @@ sealed class DrawerScreens (
     data object CriarMaterial: DrawerScreens(
         title = "Criar Material",
         route = "criarMaterial",
-        icon = Icons.Outlined.Edit,
+        icon = R.drawable.icon_material,
         textColor = MediumPurple
     )
     data object FaleComEdu: DrawerScreens(
         title = "Fale com Edu",
         route = "faleComEdu",
-        icon = Icons.Default.Call,
+        icon = R.drawable.icon_chat_edu,
         textColor = MediumPurple
     )
 }

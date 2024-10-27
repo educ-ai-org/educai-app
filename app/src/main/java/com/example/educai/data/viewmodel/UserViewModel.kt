@@ -1,13 +1,16 @@
 package com.example.educai.data.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.educai.data.model.Classroom
 import com.example.educai.data.model.ErrorResponse
 import com.example.educai.data.model.Participant
 import com.example.educai.data.network.RetrofitInstance
 import com.example.educai.utils.getErrorMessageFromJson
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,6 +20,7 @@ class UserViewModel : ViewModel() {
         private set
     var participants = mutableStateOf<List<Participant>>(emptyList())
         private set
+    val userPictureUrl: MutableLiveData<String?> = MutableLiveData()
     val errorMessage = MutableLiveData<ErrorResponse>()
     val isLoading = MutableLiveData<Boolean>()
 
@@ -65,4 +69,24 @@ class UserViewModel : ViewModel() {
             }
         })
     }
+
+    fun getUserPictureUrl() {
+
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.userServiceScalars.getUserPictureUrl()
+
+                if (response.isSuccessful) {
+                  userPictureUrl.value = response.body()
+
+                } else {
+                    userPictureUrl.value = null
+                }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", e.toString())
+                userPictureUrl.value = null
+            }
+        }
+    }
+
 }
