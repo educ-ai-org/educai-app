@@ -4,9 +4,11 @@ import com.example.educai.MainActivity
 import com.example.educai.data.contexts.TokenManager
 import com.example.educai.data.services.AuthService
 import com.example.educai.data.services.ClassworkService
+import com.example.educai.data.services.ClassworksService
 import com.example.educai.data.services.LeaderboardService
 import com.example.educai.data.services.IAService
 import com.example.educai.data.services.DictionaryService
+import com.example.educai.data.services.MaterialService
 import com.example.educai.data.services.UserService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -87,6 +89,14 @@ object RetrofitInstance {
 
     val classworkService: ClassworkService by lazy {
         retrofit.create(ClassworkService::class.java)
+    }
+
+    val classworksService: ClassworksService by lazy {
+        retrofit.create(ClassworksService::class.java)
+    }
+
+    val materialService by lazy {
+        retrofit.create(MaterialService::class.java)
     }
 }
 
