@@ -1,5 +1,8 @@
 package com.example.educai.components
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -16,12 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,11 +37,14 @@ import com.example.educai.ui.theme.LightGrey
 import com.example.educai.ui.theme.MediumPurple
 
 @Composable
-fun Post() {
-    val mockTitle = "Título Post"
-    val mockDate = "01/09/2024"
-    val mockDescription = "Texto descritivo do professor Texto descritivo do professor Texto descritivo"
-    val mockFileName = "arquivo.pdf"
+fun Post(
+    title: String,
+    date: String,
+    description: String,
+    fileName: String,
+    fileUrl: String? = null
+) {
+    val context = LocalContext.current
 
     val borderShape = RoundedCornerShape(10.dp)
     val roundedJustOnTop = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
@@ -82,7 +88,7 @@ fun Post() {
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = mockTitle,
+                            text = title,
                             style = fonteTitulo
                         )
                     }
@@ -96,28 +102,41 @@ fun Post() {
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "Data de publicação: $mockDate",
+                    text = "Data de publicação: $date",
                     style = fonteDescricao
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = mockDescription,
+                    text = description,
                     style = fonteDescricao
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = mockFileName,
+                    text = fileName,
                     style = fonteLink,
-                    modifier = Modifier.clickable { /* Chamar função para abrir o arquivo */ }
+                    modifier = Modifier.clickable {
+                        fileUrl?.let { openDocumentInBrowser(context, it) }
+                    }
                 )
             }
         }
     }
 }
 
+// Função para abrir o documento no navegador
+fun openDocumentInBrowser(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
+}
 
 @Composable
 @Preview
 fun PostPreview() {
-    Post()
+    Post(
+        title = "Título de Exemplo",
+        date = "01/01/2024",
+        fileName = "Documento de Exemplo.pdf",
+        description = "Descrição do documento",
+        fileUrl = "https://www.example.com/document.pdf"
+    )
 }

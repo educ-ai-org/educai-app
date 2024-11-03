@@ -7,6 +7,7 @@ import com.example.educai.data.services.ClassworkService
 import com.example.educai.data.services.LeaderboardService
 import com.example.educai.data.services.IAService
 import com.example.educai.data.services.DictionaryService
+import com.example.educai.data.services.PostService
 import com.example.educai.data.services.UserService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -87,6 +88,10 @@ object RetrofitInstance {
 
     val classworkService: ClassworkService by lazy {
         retrofit.create(ClassworkService::class.java)
+    }
+
+    val postsService: PostService by lazy {
+        retrofit.create(PostService::class.java)
     }
 }
 
