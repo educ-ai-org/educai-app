@@ -47,27 +47,23 @@ class UserViewModel : ViewModel() {
         })
     }
 
-    fun getParticipantsByClassId ( classroomId: String ) {
-        isLoading.value = true
-
-        val call = RetrofitInstance.userService.getParticipantsByClassId(classroomId)
-
-        call.enqueue(object : Callback<List<Participant>> {
-            override fun onResponse(call: Call<List<Participant>>, response: Response<List<Participant>>) {
+    fun getParticipantsByClassId(classroomId: String) {
+        viewModelScope.launch {
+            isLoading.value = true
+            try {
+                val response = RetrofitInstance.userService.getParticipantsByClassId(classroomId)
                 if (response.isSuccessful) {
                     participants.value = response.body() ?: emptyList()
+                    fetchProfilePictures(classroomId)
                 } else {
                     errorMessage.postValue(response.errorBody()?.string()?.getErrorMessageFromJson())
                 }
-
+            } catch (e: Exception) {
+                errorMessage.postValue(e.message?.getErrorMessageFromJson())
+            } finally {
                 isLoading.value = false
             }
-
-            override fun onFailure(call: Call<List<Participant>>, t: Throwable) {
-                errorMessage.postValue(t.message.toString().getErrorMessageFromJson())
-                isLoading.value = false
-            }
-        })
+        }
     }
 
     fun getUserPictureUrl() {
@@ -88,5 +84,27 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
+    private suspend fun fetchProfilePictures(classroomId: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.userService.getProfilePictures(classroomId)
+                if (response.isSuccessful) {
+
+                    val pictures = response.body() ?: emptyList()
+                    participants.value = participants.value.map { participant ->
+                        val userPicture = pictures.find { it.id == participant.id }
+                        participant.copy(profilePicture = userPicture?.profilePicture)
+                    }
+
+                } else {
+                    Log.e("LeaderboardViewModel", "Error fetching student pictures: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("LeaderboardViewModel", "Error fetching student pictures", e)
+            }
+        }
+    }
+
 
 }

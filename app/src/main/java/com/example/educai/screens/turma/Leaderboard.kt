@@ -18,8 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,16 +28,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.educai.ui.theme.LightPurple
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.R
 import com.example.educai.components.StudentRanking
 import com.example.educai.data.viewmodel.LeaderboardViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.educai.ui.theme.LightPurple
 
 @Composable
 fun Leaderboard(idTurma: String,
     viewModel: LeaderboardViewModel = viewModel()
 ) {
+
+    val leaderboard = viewModel.leaderboard.value
 
     LaunchedEffect(Unit) {
         viewModel.getLeaderboard(idTurma)
@@ -81,12 +83,13 @@ fun Leaderboard(idTurma: String,
                 .fillMaxHeight()
                 .padding(16.dp)
         ) {
-            itemsIndexed(viewModel.leaderboard.value) { index, student ->
+            itemsIndexed(leaderboard) { index, student ->
                 Column {
                     StudentRanking(
                         posicao = index + 1,
                         nome = student.name,
-                        pontos = student.score
+                        pontos = student.score,
+                        profilePictureUrl = student.profilePicture
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
