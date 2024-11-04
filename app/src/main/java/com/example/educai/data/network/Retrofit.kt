@@ -19,8 +19,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://educai.eastus.cloudapp.azure.com/api/"
-    private const val BASE_URL_IA = "https://educai.eastus.cloudapp.azure.com/ia-api/"
+    private const val BASE_URL = "https://api.educai.xyz"
+    private const val BASE_URL_IA = "https://ai.educai.xyz"
 
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
