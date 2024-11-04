@@ -4,11 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,15 +22,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.educai.R
-import com.example.educai.data.model.Participant
 import com.example.educai.data.viewmodel.UserViewModel
 
 @Composable
@@ -64,28 +65,39 @@ fun Pessoas(
 @Composable
 fun ParticipantRow(
     viewModel: UserViewModel,
-    role: String
+    role: String,
 ) {
     viewModel.participants.value.forEach {
         participant ->
         if(participant.role == role){
             Row(
                 modifier = Modifier
-                    .height(32.dp)
+                    .height(45.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.profileimage),
-                    contentDescription = "Foto de perfil",
-                    modifier = Modifier
-                        .height(18.dp)
-                        .padding(end = 16.dp)
-                        .clip(RoundedCornerShape(50.dp))
-                )
+                if (!participant.profilePicture.isNullOrEmpty()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(participant.profilePicture),
+                        contentDescription = "Imagem do perfil",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.profileimage),
+                        contentDescription = "Imagem do perfil",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(RoundedCornerShape(50.dp))
+                    )
+                }
                 Text(
                     text = participant.name,
                     color = Color.Black,
+                    modifier = Modifier.padding(start = 8.dp),
                     fontSize = 16.sp,
                 )
             }

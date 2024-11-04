@@ -4,39 +4,56 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.educai.data.model.ErrorResponse
 import com.example.educai.data.model.Leaderboard
 import com.example.educai.data.network.RetrofitInstance
 import com.example.educai.utils.getErrorMessageFromJson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 
 class LeaderboardViewModel : ViewModel() {
     var leaderboard = mutableStateOf<List<Leaderboard>>(emptyList())
-        private set
     val errorMessage = MutableLiveData<ErrorResponse>()
     var isLoading = mutableStateOf(false)
 
-    fun getLeaderboard(classroomId: String) {
-        isLoading.value = true
-
-        val call = RetrofitInstance.leaderboardService.getLeaderboard(classroomId)
-
-        call.enqueue(object : Callback<List<Leaderboard>> {
-            override fun onResponse(call: Call<List<Leaderboard>>, response: Response<List<Leaderboard>>) {
+    suspend fun getLeaderboard(classroomId: String) {
+        viewModelScope.launch {
+            isLoading.value = true
+            try {
+                val response = RetrofitInstance.leaderboardService.getLeaderboard(classroomId)
                 if (response.isSuccessful) {
                     leaderboard.value = response.body() ?: emptyList()
+                    fetchStudentPictures(classroomId)
                 } else {
                     errorMessage.postValue(response.errorBody()?.string()?.getErrorMessageFromJson())
                 }
+            } catch (e: Exception) {
+                errorMessage.postValue(e.message?.getErrorMessageFromJson())
+            } finally {
                 isLoading.value = false
             }
-
-            override fun onFailure(call: Call<List<Leaderboard>>, t: Throwable) {
-                errorMessage.postValue(t.message.toString().getErrorMessageFromJson())
-                isLoading.value = false
-            }
-        })
+        }
     }
+
+    private suspend fun fetchStudentPictures(classroomId: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.userService.getProfilePictures(classroomId)
+                if (response.isSuccessful) {
+
+                    val studentPictures = response.body() ?: emptyList()
+                    leaderboard.value = leaderboard.value.map { student ->
+                        val studentPicture = studentPictures.find { it.id == student.id }
+                        student.copy(profilePicture = studentPicture?.profilePicture)
+                    }
+
+                } else {
+                    Log.e("LeaderboardViewModel", "Error fetching student pictures: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("LeaderboardViewModel", "Error fetching student pictures", e)
+            }
+        }
+    }
+
 }

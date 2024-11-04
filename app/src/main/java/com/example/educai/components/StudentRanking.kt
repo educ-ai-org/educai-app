@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,10 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.educai.R
 
 @Composable
-fun StudentRanking(posicao: Int, nome: String, pontos: Int) {
+fun StudentRanking(posicao: Int, nome: String, pontos: Int,  profilePictureUrl: String?) {
     val backgroundColor = when (posicao) {
         1 -> Color(0xFFFFD700)
         2 -> Color(0xFFC0C0C0)
@@ -50,14 +53,25 @@ fun StudentRanking(posicao: Int, nome: String, pontos: Int) {
             Row (
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.profileimage),
-                    contentDescription = "Imagem do perfil",
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .clip(RoundedCornerShape(50.dp))
-                        .height(60.dp)
-                )
+                if (!profilePictureUrl.isNullOrEmpty()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(profilePictureUrl),
+                        contentDescription = "Imagem do perfil",
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(60.dp)
+                            .clip(CircleShape)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.profileimage),
+                        contentDescription = "Imagem do perfil",
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(60.dp)
+                            .clip(CircleShape)
+                    )
+                }
                 Column {
                     Text(
                         text = nome,
@@ -91,5 +105,5 @@ fun StudentRanking(posicao: Int, nome: String, pontos: Int) {
 @Preview
 @Composable
 fun StudentRankingPreview() {
-    StudentRanking(posicao = 1, nome = "João", pontos = 100)
+    StudentRanking(posicao = 1, nome = "João", pontos = 100, "")
 }
