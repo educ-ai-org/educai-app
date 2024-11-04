@@ -294,7 +294,7 @@ fun TurmaViwer(modifier: Modifier = Modifier) {
                     .fillMaxHeight()
             ) {
                 Text(
-                    text = "30 alunos",
+                    text = "",
                     style = fonteMedia
                 )
             }
