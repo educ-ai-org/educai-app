@@ -1,10 +1,10 @@
 package com.example.educai.data.model
 
 data class Classwork (
-    val id: String?,
+    val id: String,
     val title: String,
     val datePosting: String,
-    val endDate: String,
+    var endDate: String,
     val description: String,
     val totalAnswers: Int?,
     val totalQuestions: Int?,

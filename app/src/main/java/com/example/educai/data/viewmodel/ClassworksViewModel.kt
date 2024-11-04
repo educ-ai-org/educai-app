@@ -21,7 +21,7 @@ class ClassworksViewModel : ViewModel(){
     fun getClassworks(classroomId: String) {
         isLoading.value = true
 
-        val call = RetrofitInstance.classworkService.getClassworks(classroomId)
+        val call = RetrofitInstance.classworksService.getClassworks(classroomId)
 
         call.enqueue(object : Callback<List<Classwork>> {
             override fun onResponse(call: Call<List<Classwork>>, response: Response<List<Classwork>>) {

@@ -18,7 +18,7 @@ import retrofit2.Response
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class ClassworkViewModel: ViewModel() {
+class ClassworkViewModel: ViewModel(){
     val classwork = MutableLiveData<Classwork>()
     var questionsAnswers: MutableList<AnsweredQuestion> = mutableListOf()
 

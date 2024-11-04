@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -32,10 +33,6 @@ import com.example.educai.R
 import com.example.educai.data.viewmodel.MaterialViewModel
 import com.example.educai.ui.theme.GrayBold
 import com.example.educai.ui.theme.LightPurple
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 
 val fonteBold = FontFamily(
     Font(R.font.montserrat_bold, FontWeight.Normal)
@@ -66,10 +63,10 @@ fun MaterialCreation(materialViewModel: MaterialViewModel = viewModel()) {
     var allCheckboxData by remember {
         mutableStateOf(
             listOf(
-                CheckboxData("Escreva instruções","Instruções", height = 60.dp, icon = R.drawable.instrucoes),
-                CheckboxData("Link do youtube","Link youtube", height = 60.dp, icon = R.drawable.link),
-                CheckboxData("Carregar Documento","Documento", height = 60.dp, icon = R.drawable.documento),
-                CheckboxData("Carregar arquivo de áudio MP3","MP3", height = 60.dp, icon = R.drawable.music),
+                CheckboxData("Escreva instruções", "Instruções", height = 60.dp, icon = R.drawable.instrucoes),
+                CheckboxData("Link do youtube", "Link youtube", height = 60.dp, icon = R.drawable.link),
+                CheckboxData("Carregar Documento", "Documento", height = 60.dp, icon = R.drawable.documento),
+                CheckboxData("Carregar arquivo de áudio MP3", "MP3", height = 60.dp, icon = R.drawable.music),
             )
         )
     }
@@ -95,13 +92,36 @@ fun MaterialCreation(materialViewModel: MaterialViewModel = viewModel()) {
     }
 
     val context = LocalContext.current
+    val isLoading by materialViewModel.isLoading.observeAsState(false)
+    val showErrorModal = remember { mutableStateOf(false) }
+
+    fun clearAllFields() {
+        allCheckboxData = allCheckboxData.map { it.copy(value = "", checked = false) }
+    }
+
+    fun clearFieldIfUnchecked(data: CheckboxData) {
+        if (!data.checked) {
+            allCheckboxData = allCheckboxData.map {
+                if (it.title == data.title) it.copy(value = "") else it
+            }
+        }
+    }
+
+    LaunchedEffect(isLoading) {
+        if (!isLoading) {
+            if (materialViewModel.errorMessage.value != null) {
+                showErrorModal.value = true
+            } else {
+                clearAllFields()
+            }
+        }
+    }
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         item {
             Text(
@@ -164,6 +184,7 @@ fun MaterialCreation(materialViewModel: MaterialViewModel = viewModel()) {
                                 allCheckboxData = allCheckboxData.toMutableList().apply {
                                     this[index] = this[index].copy(checked = checked)
                                 }
+                                clearFieldIfUnchecked(allCheckboxData[index])
                             }
                         )
                     }
@@ -272,66 +293,51 @@ fun MaterialCreation(materialViewModel: MaterialViewModel = viewModel()) {
                                         }
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(8.dp))
                             }
                         }
                     }
                 }
+            }
+        }
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                Box(
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 36.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Button(
+                    onClick = {
+                        materialViewModel.postMaterial(
+                            context,
+                            allCheckboxData.find { it.title == "Escreva instruções" }?.value,
+                            allCheckboxData.find { it.title == "Link do youtube" }?.value,
+                            allCheckboxData.find { it.title == "Carregar arquivo de áudio MP3" }?.value?.let { Uri.parse(it) },
+                            allCheckboxData.find { it.title == "Carregar Documento" }?.value?.let { Uri.parse(it) }
+                        )
+                    },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 36.dp),
-                    contentAlignment = Alignment.BottomCenter
+                        .padding(top = 16.dp)
+                        .width(260.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = LightPurple)
                 ) {
-                    Button(
-                        onClick = {
-                            val instructions = allCheckboxData.find { it.title == "Escreva instruções" }?.value
-                            val youtubeLink = allCheckboxData.find { it.title == "Link do youtube" }?.value
-                            val documentUri = allCheckboxData.find { it.title == "Carregar Documento" }?.value
-                            val audioUri = allCheckboxData.find { it.title == "Carregar arquivo de áudio MP3" }?.value
-
-                            val documentPart = documentUri?.let { uri ->
-                                val file = File(uri)
-                                MultipartBody.Part.createFormData(
-                                    "document",
-                                    file.name,
-                                    file.asRequestBody("application/pdf".toMediaTypeOrNull())
-                                )
-                            }
-
-                            val audioPart = audioUri?.let { uri ->
-                                val file = File(uri)
-                                MultipartBody.Part.createFormData(
-                                    "audio",
-                                    file.name,
-                                    file.asRequestBody("audio/mpeg".toMediaTypeOrNull())
-                                )
-                            }
-
-                            materialViewModel.postMaterial(
-                                context,
-                                instructions,
-                                youtubeLink,
-                                audioPart,
-                                documentPart
-                            )
-                        },
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .width(260.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = LightPurple)
-                    ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(color = Color.White)
+                    } else {
                         Text("Gerar Material Didático")
                     }
                 }
             }
         }
     }
+
+    if (showErrorModal.value) {
+        ErrorModal(onDismiss = { showErrorModal.value = false })
+    }
 }
+
 
 @Composable
 fun CheckboxMaterial(data: CheckboxData, onCheckedChange: (Boolean) -> Unit) {
@@ -383,4 +389,22 @@ fun LabelWithIcon(id: Int, texto: String, textColor: Color = Color.Black) {
         Spacer(modifier = Modifier.width(4.dp))
         Text(text = texto, fontSize = 12.sp, color = textColor)
     }
+}
+
+@Composable
+fun ErrorModal(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = "Erro", style = MaterialTheme.typography.titleMedium)
+        },
+        text = {
+            Text(text = "Não foi possível gerar material. Tente novamente.")
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK")
+            }
+        }
+    )
 }

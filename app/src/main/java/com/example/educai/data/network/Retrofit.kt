@@ -16,6 +16,7 @@ import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
     private const val BASE_URL = "https://educai.eastus.cloudapp.azure.com/api/"
@@ -38,6 +39,9 @@ object RetrofitInstance {
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
     private val retrofit: Retrofit by lazy {
@@ -60,6 +64,7 @@ object RetrofitInstance {
         Retrofit.Builder()
             .baseUrl(BASE_URL_IA)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
     }
 
@@ -96,7 +101,7 @@ object RetrofitInstance {
     }
 
     val materialService by lazy {
-        retrofit.create(MaterialService::class.java)
+        retrofitIA.create(MaterialService::class.java)
     }
 }
 
