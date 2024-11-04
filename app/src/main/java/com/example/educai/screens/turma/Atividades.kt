@@ -41,11 +41,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.educai.mock.getMockAtividades
+import com.example.educai.data.viewmodel.ClassworksViewModel
 import com.example.educai.ui.theme.GrayBold
 import com.example.educai.ui.theme.Green
 import com.example.educai.ui.theme.LightPurple
 import com.example.educai.ui.theme.Yellow
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.educai.data.model.Classwork
+import com.example.educai.data.model.Question
+
 
 val fonte = FontFamily(
     Font(R.font.montserrat, FontWeight.Normal)
@@ -60,7 +64,7 @@ val fonteSemibold = FontFamily(
 )
 
 @Composable
-fun Atividades() {
+fun Atividades(viewModel: ClassworksViewModel = viewModel(), idTurma: String) {
     val navController = rememberNavController()
 
     NavHost(
@@ -69,7 +73,7 @@ fun Atividades() {
     ) {
         composable("list") {
             ListaAtividades(
-                navegarAtividade = { navController.navigate("atividade/$it") }
+                navegarAtividade = { navController.navigate("atividade/$it") }, viewModel = viewModel, idTurma = idTurma
             )
         }
         composable("atividade/{classworkId}") { backStackEntry ->
@@ -98,11 +102,12 @@ fun Atividades() {
 
 
 @Composable
-fun ListaAtividades(navegarAtividade: (id: String) -> Unit) {
-    var atividades by remember { mutableStateOf(listOf<AtividadeData>()) }
+fun ListaAtividades(navegarAtividade: (id: String) -> Unit, viewModel: ClassworksViewModel = viewModel(), idTurma: String) {
+    var atividades by remember { mutableStateOf(listOf<Classwork>()) }
 
     LaunchedEffect(Unit) {
-        atividades = fetchAtividadesFromDatabase()
+        viewModel.getClassworks(idTurma)
+        atividades = viewModel.classworks.value ?: emptyList()
     }
     LazyColumn(
         modifier = Modifier
@@ -128,42 +133,8 @@ fun ListaAtividades(navegarAtividade: (id: String) -> Unit) {
 }
 
 
-//Adicionar suspend para funcao assincrona
-//suspend fun fetchAtividadesFromDatabase(): List<AtividadeData> {
-fun fetchAtividadesFromDatabase(): List<AtividadeData> {
-    //return withContext(Dispatchers.IO) {
-    return getMockAtividades()
-    //}
-}
-
-data class Option(
-    val id: String? = null,
-    val key: String,
-    val description: String
-)
-
-data class Question(
-    val id: String? = null,
-    val description: String,
-    val correctAnswerKey: String,
-    val options: List<Option>
-)
-
-data class AtividadeData(
-    val id: String = "67107360149e53697b69ec01",
-    val title: String,
-    val datePosting: String,
-    val endDate: String,
-    val description: String,
-    val totalAnswers: Int? = null,
-    val totalQuestions: Int? = null,
-    val questions: List<Question>,
-    val correctPercentage: Double? = null,
-    val hasAnswered: Boolean? = null
-)
-
 @Composable
-fun Atividade(atividadeData: AtividadeData) {
+fun Atividade(atividadeData: Classwork) {
     val fontePequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
     val fonteMedia = MaterialTheme.typography.bodyMedium.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
     val fonteBoldTitulo = MaterialTheme.typography.titleMedium.copy(fontFamily = fonteBold, fontSize = 16.sp)
@@ -341,7 +312,8 @@ fun PreviewTurmaViwer() {
 @Composable
 fun PreviewAtividade() {
     Atividade(
-        atividadeData = AtividadeData(
+        atividadeData = Classwork(
+            id = "1",
             title = "Sample Activity",
             datePosting = "2023-10-01",
             endDate = "2023-10-10",
@@ -356,10 +328,4 @@ fun PreviewAtividade() {
             hasAnswered = true
         )
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewAtividades() {
-    Atividades()
 }

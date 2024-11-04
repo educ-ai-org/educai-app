@@ -1,13 +1,13 @@
 package com.example.educai.data.model
 
-data class Question (
+data class Question(
     val id: String,
     val description: String,
-    val options: List<Options>,
-    val correctAnswerKey: String?
+    val correctAnswerKey: String,
+    val options: List<Option>
 )
 
-data class Options (
+data class Option(
     val id: String,
     val key: String,
     val description: String
