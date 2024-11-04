@@ -17,7 +17,7 @@ fun BottomScreensNavigation(navController: NavHostController, idTurma: String) {
         startDestination = BottomNavigationScreens.Posts.route
     ) {
         composable(BottomNavigationScreens.Posts.route) {
-            Posts()
+            Posts(classroomId = idTurma)
         }
         composable(BottomNavigationScreens.Atividades.route) {
             Atividades(idTurma = idTurma)

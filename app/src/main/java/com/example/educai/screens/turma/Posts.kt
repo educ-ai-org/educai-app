@@ -5,22 +5,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.educai.components.Post
+import com.example.educai.data.viewmodel.PostViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun Posts() {
-    val postList = listOf(
-        "Post 1",
-        "Post 2",
-        "Post 3",
-        "Post 4",
-        "Post 5",
-        "Post 6"
-    )
+fun Posts(
+    classroomId: String,
+    postViewModel: PostViewModel = viewModel()
+) {
+    // Observe the posts from the ViewModel
+    val posts by postViewModel.posts.observeAsState(emptyList())
+    val error by postViewModel.error.observeAsState("")
+
+    // Trigger the getPosts function when the composable is loaded
+    LaunchedEffect(classroomId) {
+        postViewModel.getPosts(classroomId)
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -32,8 +42,22 @@ fun Posts() {
             TurmaViwer()
         }
 
-        items(postList) { post ->
-            Post()
+        // Display posts retrieved from ViewModel
+        items(posts) { post ->
+            Post(
+                title = post.title,
+                fileName = post.originalFileName,
+                date = post.datePosting,
+                description = post.description,
+                fileUrl = post.file
+            )
+        }
+
+        // Optionally, display an error message if there is one
+        if (error.isNotEmpty()) {
+            item {
+                Text(text = error, color = Color.Red)
+            }
         }
     }
 }
@@ -41,5 +65,5 @@ fun Posts() {
 @Preview(showBackground = true)
 @Composable
 fun PostsPreview() {
-    Posts()
+    Posts("classroomId")
 }
