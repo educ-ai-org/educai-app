@@ -11,42 +11,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.R
-import com.example.educai.screens.turma.Question
+import com.example.educai.data.viewmodel.MaterialViewModel
 import com.example.educai.ui.theme.GrayBold
 import com.example.educai.ui.theme.LightPurple
 
@@ -68,7 +52,7 @@ data class CheckboxData(
 )
 
 @Composable
-fun MaterialCreation() {
+fun MaterialCreation(materialViewModel: MaterialViewModel = viewModel()) {
     val fonteBoldTitulo = MaterialTheme.typography.titleMedium.copy(fontFamily = fonteBold)
     val fonteMedia = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte)
     val fonteSemiboldTitulo = MaterialTheme.typography.titleMedium.copy(fontFamily = fonte)
@@ -79,10 +63,10 @@ fun MaterialCreation() {
     var allCheckboxData by remember {
         mutableStateOf(
             listOf(
-                CheckboxData("Escreva instruções","Instruções", height = 60.dp, icon = R.drawable.instrucoes),
-                CheckboxData("Link do youtube","Link youtube", height = 60.dp, icon = R.drawable.link),
-                CheckboxData("Carregar Documento","Documento", height = 60.dp, icon = R.drawable.documento),
-                CheckboxData("Carregar arquivo de áudio MP3","MP3", height = 60.dp, icon = R.drawable.music),
+                CheckboxData("Escreva instruções", "Instruções", height = 60.dp, icon = R.drawable.instrucoes),
+                CheckboxData("Link do youtube", "Link youtube", height = 60.dp, icon = R.drawable.link),
+                CheckboxData("Carregar Documento", "Documento", height = 60.dp, icon = R.drawable.documento),
+                CheckboxData("Carregar arquivo de áudio MP3", "MP3", height = 60.dp, icon = R.drawable.music),
             )
         )
     }
@@ -107,218 +91,253 @@ fun MaterialCreation() {
         }
     }
 
-        LazyColumn(
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            item {
-                Text(
-                    text = "Criação de material",
-                    style = fonteBoldTitulo,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
+    val context = LocalContext.current
+    val isLoading by materialViewModel.isLoading.observeAsState(false)
+    val showErrorModal = remember { mutableStateOf(false) }
 
-            item {
-                Row(
+    fun clearAllFields() {
+        allCheckboxData = allCheckboxData.map { it.copy(value = "", checked = false) }
+    }
+
+    fun clearFieldIfUnchecked(data: CheckboxData) {
+        if (!data.checked) {
+            allCheckboxData = allCheckboxData.map {
+                if (it.title == data.title) it.copy(value = "") else it
+            }
+        }
+    }
+
+    LaunchedEffect(isLoading) {
+        if (!isLoading) {
+            if (materialViewModel.errorMessage.value != null) {
+                showErrorModal.value = true
+            } else {
+                clearAllFields()
+            }
+        }
+    }
+
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            Text(
+                text = "Criação de material",
+                style = fonteBoldTitulo,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.edu_robot),
+                    contentDescription = "Robo Edu",
+                    modifier = Modifier.size(50.dp)
+                )
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        .height(70.dp)
+                        .border(BorderStroke(1.dp, Color.Gray), shape = RoundedCornerShape(8.dp))
+                        .padding(8.dp),
+                    contentAlignment = Alignment.CenterStart
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.edu_robot),
-                        contentDescription = "Robo Edu",
-                        modifier = Modifier.size(50.dp)
+                    Text(
+                        text = "Quais tipos de entradas você fornecerá para a criação do material didático?",
+                        style = fonteMedia,
+                        modifier = Modifier.padding(start = 8.dp)
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(70.dp)
-                            .border(BorderStroke(1.dp, Color.Gray), shape = RoundedCornerShape(8.dp))
-                            .padding(8.dp),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(
-                            text = "Quais tipos de entradas você fornecerá para a criação do material didático?",
-                            style = fonteMedia,
-                            modifier = Modifier.padding(start = 8.dp)
+                }
+            }
+        }
+
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp)
+                    .height(100.dp)
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    userScrollEnabled = false
+                ) {
+                    items(allCheckboxData.size) { index ->
+                        CheckboxMaterial(
+                            data = allCheckboxData[index],
+                            onCheckedChange = { checked ->
+                                allCheckboxData = allCheckboxData.toMutableList().apply {
+                                    this[index] = this[index].copy(checked = checked)
+                                }
+                                clearFieldIfUnchecked(allCheckboxData[index])
+                            }
                         )
                     }
                 }
             }
+        }
 
-            item {
-                Box(
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                Card(
+                    border = BorderStroke(1.dp, color = GrayBold),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 20.dp)
-                        .height(100.dp)
+                        .background(color = Color.White)
                 ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        userScrollEnabled = false
+                    Column(
+                        modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 32.dp, end = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(allCheckboxData.size) { index ->
-                            CheckboxMaterial(
-                                data = allCheckboxData[index],
-                                onCheckedChange = { checked ->
-                                    allCheckboxData = allCheckboxData.toMutableList().apply {
-                                        this[index] = this[index].copy(checked = checked)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+                        Text(
+                            text = "Entradas",
+                            style = fonteSemiboldTitulo,
+                            textAlign = TextAlign.Center,
+                        )
 
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                ) {
-                    Card(
-                        border = BorderStroke(1.dp, color = GrayBold),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(color = Color.White)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 32.dp, end = 32.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Entradas",
-                                style = fonteSemiboldTitulo,
-                                textAlign = TextAlign.Center,
-                            )
-
-                            allCheckboxData.forEach { checkboxData ->
-                                if (checkboxData.checked) {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    when (checkboxData.title) {
-                                        "Escreva instruções", "Link do youtube" -> {
-                                            OutlinedTextField(
-                                                value = checkboxData.value,
-                                                onValueChange = { newValue ->
-                                                    allCheckboxData = allCheckboxData.map {
-                                                        if (it.title == checkboxData.title) it.copy(value = newValue) else it
-                                                    }
-                                                },
-                                                label = {
-                                                    Row(
-                                                        verticalAlignment = Alignment.CenterVertically,
-                                                        horizontalArrangement = Arrangement.Start,
-                                                        modifier = Modifier.height(32.dp)
-                                                    ) {
-                                                        Spacer(modifier = Modifier.width(8.dp))
-                                                        LabelWithIcon(id = checkboxData.icon, texto = checkboxData.title)
-                                                        Spacer(modifier = Modifier.width(8.dp))
-                                                    }
-                                                },
-                                                colors = OutlinedTextFieldDefaults.colors(
-                                                    unfocusedBorderColor = GrayBold
-                                                ),
-                                                textStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte),
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .height(checkboxData.height)
-                                            )
-                                        }
-                                        "Carregar arquivo de áudio MP3" -> {
-                                            OutlinedButton(
-                                                onClick = { audioLauncher.launch(arrayOf("audio/*")) },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .height(checkboxData.height),
-                                                border = BorderStroke(1.dp, GrayBold),
-                                                shape = RoundedCornerShape(4.dp)
-                                            ) {
+                        allCheckboxData.forEach { checkboxData ->
+                            if (checkboxData.checked) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                when (checkboxData.title) {
+                                    "Escreva instruções", "Link do youtube" -> {
+                                        OutlinedTextField(
+                                            value = checkboxData.value,
+                                            onValueChange = { newValue ->
+                                                allCheckboxData = allCheckboxData.map {
+                                                    if (it.title == checkboxData.title) it.copy(value = newValue) else it
+                                                }
+                                            },
+                                            label = {
                                                 Row(
                                                     verticalAlignment = Alignment.CenterVertically,
                                                     horizontalArrangement = Arrangement.Start,
-                                                    modifier = Modifier.fillMaxWidth()
+                                                    modifier = Modifier.height(32.dp)
                                                 ) {
-                                                    LabelWithIcon(
-                                                        id = checkboxData.icon,
-                                                        texto = checkboxData.title,
-                                                        textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else GrayBold
-                                                    )
+                                                    Spacer(modifier = Modifier.width(8.dp))
+                                                    LabelWithIcon(id = checkboxData.icon, texto = checkboxData.title)
+                                                    Spacer(modifier = Modifier.width(8.dp))
                                                 }
-                                            }
-                                        }
-                                        "Carregar Documento" -> {
-                                            OutlinedButton(
-                                                onClick = { documentLauncher.launch(arrayOf("application/pdf")) },
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .height(checkboxData.height),
-                                                border = BorderStroke(1.dp, GrayBold),
-                                                shape = RoundedCornerShape(4.dp)
+                                            },
+                                            colors = OutlinedTextFieldDefaults.colors(
+                                                unfocusedBorderColor = GrayBold
+                                            ),
+                                            textStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(checkboxData.height)
+                                        )
+                                    }
+                                    "Carregar arquivo de áudio MP3" -> {
+                                        OutlinedButton(
+                                            onClick = { audioLauncher.launch(arrayOf("audio/*")) },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(checkboxData.height),
+                                            border = BorderStroke(1.dp, GrayBold),
+                                            shape = RoundedCornerShape(4.dp)
+                                        ) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.Start,
+                                                modifier = Modifier.fillMaxWidth()
                                             ) {
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically,
-                                                    horizontalArrangement = Arrangement.Start,
-                                                    modifier = Modifier.fillMaxWidth()
-                                                ) {
-                                                    LabelWithIcon(
-                                                        id = checkboxData.icon,
-                                                        texto = checkboxData.title,
-                                                        textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else GrayBold
-                                                    )
-                                                }
+                                                LabelWithIcon(
+                                                    id = checkboxData.icon,
+                                                    texto = checkboxData.title,
+                                                    textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else GrayBold
+                                                )
                                             }
                                         }
                                     }
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                    "Carregar Documento" -> {
+                                        OutlinedButton(
+                                            onClick = { documentLauncher.launch(arrayOf("application/pdf")) },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(checkboxData.height),
+                                            border = BorderStroke(1.dp, GrayBold),
+                                            shape = RoundedCornerShape(4.dp)
+                                        ) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.Start,
+                                                modifier = Modifier.fillMaxWidth()
+                                            ) {
+                                                LabelWithIcon(
+                                                    id = checkboxData.icon,
+                                                    texto = checkboxData.title,
+                                                    textColor = if (checkboxData.value.isNotEmpty()) Color.Blue else GrayBold
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 36.dp),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Button(
-                            onClick = { /* Ação do botão */ },
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                                .width(260.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = LightPurple)
-                        ) {
-                            Text("Gerar Material Didático")
                         }
                     }
                 }
             }
         }
+
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 36.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Button(
+                    onClick = {
+                        materialViewModel.postMaterial(
+                            context,
+                            allCheckboxData.find { it.title == "Escreva instruções" }?.value,
+                            allCheckboxData.find { it.title == "Link do youtube" }?.value,
+                            allCheckboxData.find { it.title == "Carregar arquivo de áudio MP3" }?.value?.let { Uri.parse(it) },
+                            allCheckboxData.find { it.title == "Carregar Documento" }?.value?.let { Uri.parse(it) }
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .width(260.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = LightPurple)
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(color = Color.White)
+                    } else {
+                        Text("Gerar Material Didático")
+                    }
+                }
+            }
+        }
+    }
+
+    if (showErrorModal.value) {
+        ErrorModal(onDismiss = { showErrorModal.value = false })
+    }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewMaterialCreation() {
-    MaterialCreation()
-}
 
 @Composable
 fun CheckboxMaterial(data: CheckboxData, onCheckedChange: (Boolean) -> Unit) {
@@ -355,12 +374,6 @@ fun CheckboxMaterial(data: CheckboxData, onCheckedChange: (Boolean) -> Unit) {
         }
     }
 }
-@Preview(showBackground = true)
-@Composable
-private fun PreviewCheckbox() {
-    val checkboxData = CheckboxData("Link do youtube","Link youtube", height = 60.dp, icon = R.drawable.link)
-    CheckboxMaterial(checkboxData, {})
-}
 
 @Composable
 fun LabelWithIcon(id: Int, texto: String, textColor: Color = Color.Black) {
@@ -378,52 +391,20 @@ fun LabelWithIcon(id: Int, texto: String, textColor: Color = Color.Black) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PreviewLabelWithIcon() {
-    CheckboxData("Escreva instruções","Instruções", height = 60.dp, icon = R.drawable.instrucoes)
-    LabelWithIcon(R.drawable.instrucoes, "Instruções", Color.Black)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewOutlined(){
-    val checkboxData = CheckboxData("Escreva instruções","Instruções", height = 60.dp, icon = R.drawable.instrucoes)
-    var allCheckboxData by remember {
-        mutableStateOf(
-            listOf(
-                CheckboxData("Escreva instruções","Instruções", height = 60.dp, icon = R.drawable.instrucoes),
-                CheckboxData("Link do youtube","Link youtube", height = 60.dp, icon = R.drawable.link),
-                CheckboxData("Carregar Documento","Documento", height = 60.dp, icon = R.drawable.documento),
-                CheckboxData("Carregar arquivo de áudio MP3","MP3", height = 60.dp, icon = R.drawable.music),
-            )
-        )
-    }
-    OutlinedTextField(
-        value = checkboxData.value,
-        onValueChange = { newValue ->
-            allCheckboxData = allCheckboxData.map {
-                if (it.title == checkboxData.title) it.copy(value = newValue) else it
-            }
+fun ErrorModal(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = "Erro", style = MaterialTheme.typography.titleMedium)
         },
-        label = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier
-                    .height(32.dp)
-            ) {
-                Spacer(modifier = Modifier.width(8.dp))
-                LabelWithIcon(id = checkboxData.icon, texto = checkboxData.title)
-                Spacer(modifier = Modifier.width(8.dp))
-            }
+        text = {
+            Text(text = "Não foi possível gerar material. Tente novamente.")
         },
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = GrayBold
-        ),
-        textStyle = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(checkboxData.height)
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK")
+            }
+        }
     )
 }

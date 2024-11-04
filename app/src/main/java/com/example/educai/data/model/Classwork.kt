@@ -6,5 +6,9 @@ data class Classwork (
     val datePosting: String,
     var endDate: String,
     val description: String,
-    val questions: List<Question>
+    val totalAnswers: Int?,
+    val totalQuestions: Int?,
+    val questions: List<Question>,
+    val correctPercentage: Double?,
+    val hasAnswered: Boolean?
 )

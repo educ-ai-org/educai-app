@@ -38,6 +38,7 @@ import com.example.educai.data.model.ErrorResponse
 import com.example.educai.data.viewmodel.AuthViewModel
 import com.example.educai.screens.Login
 import com.example.educai.screens.MainUI
+import com.example.educai.screens.MaterialCreation
 import com.example.educai.ui.theme.BackgroundColor
 import com.example.educai.ui.theme.EducAITheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
