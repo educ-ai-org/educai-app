@@ -6,6 +6,6 @@ import retrofit2.Call
 import retrofit2.http.Path
 
 interface ClassworksService {
-    @GET("classroom/{id}/studentClassworks")
+    @GET("classroom/{id}/student-classworks")
     fun getClassworks(@Path("id") id: String) : Call<List<Classwork>>
 }
