@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.example.educai.R
 import com.example.educai.ui.theme.LightGrey
 import com.example.educai.ui.theme.MediumPurple
+import com.example.educai.ui.theme.montserratFontFamily
 
 @Composable
 fun Post(
@@ -50,8 +51,8 @@ fun Post(
     val roundedJustOnTop = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
     val borderStroke = BorderStroke(2.dp, LightGrey)
 
-    val fonteTitulo = TextStyle(fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
-    val fonteDescricao = TextStyle(fontSize = 16.sp, color = Color.Gray)
+    val fonteTitulo = TextStyle(fontSize = 21.sp, fontWeight = FontWeight.SemiBold, fontFamily = montserratFontFamily)
+    val fonteDescricao = TextStyle(fontSize = 16.sp, color = Color.Gray, fontFamily = montserratFontFamily)
     val fonteLink = TextStyle(
         fontSize = 16.sp,
         color = MediumPurple,

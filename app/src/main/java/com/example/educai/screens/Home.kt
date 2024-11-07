@@ -69,7 +69,7 @@ fun Home(
                 Class(
                     nomeTurma = turma.title,
                     nomeDisciplina = turma.course,
-                    quantidadeAlunos = turma.studentsCount,
+                    quantidadeAlunos = turma.nextSubmission,
                     onClick = {
                         navController.navigate(DrawerScreens.DetalhesTurma.createRoute(turma.id))
                     }

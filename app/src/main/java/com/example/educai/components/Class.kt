@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.educai.R
 
 @Composable
-fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:Int, onClick: () -> Unit) {
+fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:String, onClick: () -> Unit) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
@@ -62,7 +62,7 @@ fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:Int, onClick
                         Text(
                             text = nomeTurma,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
+                            fontSize = 18.sp,
                             modifier = Modifier.padding(start = 8.dp),
                             color = Color.Black
                         )
@@ -80,27 +80,27 @@ fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:Int, onClick
             Row {
                 Text(
                     text = "Nome da disciplina: ",
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     color = Color.Black,
                     modifier = Modifier.padding(start = 16.dp)
                 )
                 Text(
                     text = nomeDisciplina,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     color = Color.Gray
                 )
             }
             Row {
                 Text(
-                    text = "Quantidade de alunos: ",
-                    fontSize = 18.sp,
+                    text = "Próxima atividade: ",
+                    fontSize = 16.sp,
                     color = Color.Black,
                     modifier = Modifier.padding(start = 16.dp)
                 )
                 Text(
                     text = quantidadeAlunos.toString(),
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray
                 )

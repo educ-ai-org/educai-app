@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -49,6 +50,7 @@ import com.example.educai.ui.theme.Yellow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.data.model.Classwork
 import com.example.educai.data.model.Question
+import com.example.educai.utils.toDate
 
 
 val fonte = FontFamily(
@@ -73,7 +75,10 @@ fun Atividades(viewModel: ClassworksViewModel = viewModel(), idTurma: String) {
     ) {
         composable("list") {
             ListaAtividades(
-                navegarAtividade = { navController.navigate("atividade/$it") }, viewModel = viewModel, idTurma = idTurma
+                navegarAtividade = { navController.navigate("atividade/$it") },
+                goToReview = { navController.navigate("review/$it") },
+                viewModel = viewModel,
+                idTurma = idTurma
             )
         }
         composable("atividade/{classworkId}") { backStackEntry ->
@@ -102,12 +107,10 @@ fun Atividades(viewModel: ClassworksViewModel = viewModel(), idTurma: String) {
 
 
 @Composable
-fun ListaAtividades(navegarAtividade: (id: String) -> Unit, viewModel: ClassworksViewModel = viewModel(), idTurma: String) {
-    var atividades by remember { mutableStateOf(listOf<Classwork>()) }
+fun ListaAtividades(navegarAtividade: (id: String) -> Unit, goToReview: (id: String) -> Unit, viewModel: ClassworksViewModel = viewModel(), idTurma: String) {
 
     LaunchedEffect(Unit) {
         viewModel.getClassworks(idTurma)
-        atividades = viewModel.classworks.value ?: emptyList()
     }
     LazyColumn(
         modifier = Modifier
@@ -120,14 +123,23 @@ fun ListaAtividades(navegarAtividade: (id: String) -> Unit, viewModel: Classwork
         item() {
             TurmaViwer()
         }
-        items(atividades.size) { index ->
-            Box(
-                modifier = Modifier
-                    .clickable { navegarAtividade(atividades[index].id) }
-            ) {
-                Atividade(atividadeData = atividades[index])
+        viewModel.classworks.value?.let { classworks ->
+            items(classworks) { atividade ->
+                Box(
+                    modifier = Modifier
+                        .clickable {
+                            if (atividade.hasAnswered == true) {
+                                goToReview(atividade.id)
+                            } else {
+                                navegarAtividade(atividade.id)
+                            }
+                        }
+                ) {
+                    Atividade(atividadeData = atividade)
+                }
             }
         }
+
     }
 
 }
@@ -136,8 +148,8 @@ fun ListaAtividades(navegarAtividade: (id: String) -> Unit, viewModel: Classwork
 @Composable
 fun Atividade(atividadeData: Classwork) {
     val fontePequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-    val fonteMedia = MaterialTheme.typography.bodyMedium.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-    val fonteBoldTitulo = MaterialTheme.typography.titleMedium.copy(fontFamily = fonteBold, fontSize = 16.sp)
+    val fonteMedia = MaterialTheme.typography.bodySmall.copy(fontFamily = fonte, color = GrayBold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+    val fonteBoldTitulo = MaterialTheme.typography.titleSmall.copy(fontFamily = fonteBold, fontSize = 14.sp)
     val fonteBoldPequena = MaterialTheme.typography.bodySmall.copy(fontFamily = fonteSemibold, fontSize = 12.sp)
 
     var sentOrPending = if (atividadeData.hasAnswered == true) R.drawable.sent else R.drawable.pending
@@ -148,7 +160,7 @@ fun Atividade(atividadeData: Classwork) {
             .height(200.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(color = Color.White)
-            .border(width = 2.dp, color = Color(0xFFBEBEBE), shape = MaterialTheme.shapes.medium)
+            .border(width = 1.dp, color = Color(0xFFBEBEBE), shape = MaterialTheme.shapes.medium)
     ) {
         Column(
             modifier = Modifier
@@ -158,7 +170,7 @@ fun Atividade(atividadeData: Classwork) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .drawBehind {
-                        val strokeWidth = 2.dp.toPx()
+                        val strokeWidth = 1.dp.toPx()
                         val y = size.height - strokeWidth / 2
                         drawLine(
                             color = Color(0xFFBEBEBE),
@@ -188,7 +200,7 @@ fun Atividade(atividadeData: Classwork) {
                         text = buildAnnotatedString {
                             append("Prazo: ")
                             withStyle(style = SpanStyle(fontFamily = fonteBold)) {
-                                append(atividadeData.endDate)
+                                append(atividadeData.endDate.toDate())
                             }
                         },
                         style = fonteMedia
@@ -205,7 +217,7 @@ fun Atividade(atividadeData: Classwork) {
                     text = buildAnnotatedString {
                         append("Data publicação: ")
                         withStyle(style = SpanStyle(color = GrayBold, fontFamily = fonteBold)) {
-                            append(atividadeData.datePosting)
+                            append(atividadeData.datePosting.toDate())
                         }
                     },
                     textAlign = TextAlign.Start,
@@ -251,7 +263,7 @@ fun TurmaViwer(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(80.dp)
             .border(
-                width = 2.dp,
+                width = 1.dp,
                 color = LightPurple,
                 shape = MaterialTheme.shapes.medium
             )

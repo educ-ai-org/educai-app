@@ -52,13 +52,6 @@ fun Posts(
                 fileUrl = post.file
             )
         }
-
-        // Optionally, display an error message if there is one
-        if (error.isNotEmpty()) {
-            item {
-                Text(text = error, color = Color.Red)
-            }
-        }
     }
 }
 
