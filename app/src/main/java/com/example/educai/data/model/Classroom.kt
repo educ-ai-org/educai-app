@@ -5,5 +5,5 @@ data class Classroom (
     val title: String,
     val course: String,
     val studentsCount: Int,
-    val nextSubmission: String
+    val nextSubmission: String?
 )
