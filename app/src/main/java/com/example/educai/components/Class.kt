@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.educai.R
 
 @Composable
-fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:String, onClick: () -> Unit) {
+fun Class(nomeTurma:String, nomeDisciplina:String, proximaAtividade:String?, onClick: () -> Unit) {
     Box (
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +99,7 @@ fun Class(nomeTurma:String, nomeDisciplina:String, quantidadeAlunos:String, onCl
                     modifier = Modifier.padding(start = 16.dp)
                 )
                 Text(
-                    text = quantidadeAlunos.toString(),
+                    text = proximaAtividade ?: "-",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray
