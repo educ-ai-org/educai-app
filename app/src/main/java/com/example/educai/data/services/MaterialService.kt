@@ -8,6 +8,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MaterialService {
     @Multipart
@@ -16,6 +17,7 @@ interface MaterialService {
         @Part("instructions") instructions: String?,
         @Part("youtubeLink") youtubeLink: String?,
         @Part audio: MultipartBody.Part?,
-        @Part document: MultipartBody.Part?
+        @Part document: MultipartBody.Part?,
+        @Query("openai") openai: Boolean
     ): Call<ResponseBody>
 }
