@@ -56,4 +56,13 @@ class AuthViewModel : ViewModel() {
             }
         })
     }
+
+    fun logoff() {
+        val call = RetrofitInstance.authService.logoff()
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {}
+            override fun onFailure(call: Call<Void>, t: Throwable) {}
+        })
+    }
 }

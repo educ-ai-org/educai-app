@@ -23,11 +23,9 @@ fun Posts(
     classroomId: String,
     postViewModel: PostViewModel = viewModel()
 ) {
-    // Observe the posts from the ViewModel
     val posts by postViewModel.posts.observeAsState(emptyList())
     val error by postViewModel.error.observeAsState("")
 
-    // Trigger the getPosts function when the composable is loaded
     LaunchedEffect(classroomId) {
         postViewModel.getPosts(classroomId)
     }
@@ -42,7 +40,6 @@ fun Posts(
             TurmaViwer()
         }
 
-        // Display posts retrieved from ViewModel
         items(posts) { post ->
             Post(
                 title = post.title,

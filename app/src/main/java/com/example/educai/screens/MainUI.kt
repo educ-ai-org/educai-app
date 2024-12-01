@@ -36,7 +36,7 @@ import com.example.educai.ui.theme.MediumPurple
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainUI() {
+fun MainUI(logoff: () -> Unit) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -60,6 +60,9 @@ fun MainUI() {
                         scope.launch {
                             drawerState.close()
                         }
+                    },
+                    logoff = {
+                        logoff()
                     }
                 )
             }

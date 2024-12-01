@@ -2,10 +2,12 @@ package com.example.educai.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,7 +36,8 @@ import com.example.educai.ui.theme.montserratFontFamily
 @Composable
 fun DrawerMenu(
     currentRoute: String?,
-    menuItemOnClick: (route: String) -> Unit
+    menuItemOnClick: (route: String) -> Unit,
+    logoff: () -> Unit
 ) {
     val dividerGradient = Brush.linearGradient(
         colors = listOf(
@@ -116,6 +119,10 @@ fun DrawerMenu(
 
             Row(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        logoff()
+                    }
                     .padding(
                         all = 16.dp
                     ),
@@ -155,6 +162,9 @@ fun MenuPreview() {
         DrawerMenu(
             currentRoute = DrawerScreens.Home.route,
             menuItemOnClick = {
+
+            },
+            logoff = {
 
             }
         )

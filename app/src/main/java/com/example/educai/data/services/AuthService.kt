@@ -16,4 +16,7 @@ interface AuthService {
     fun refreshToken(
         @Header("Cookie") refreshToken: String
     ): Call<RefreshTokenResponse>
+
+    @POST("user/logoff")
+    fun logoff(): Call<Void>
 }
