@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.educai.data.model.Classwork
 import com.example.educai.data.model.Question
 import com.example.educai.utils.toDate
+import kotlin.math.roundToInt
 
 
 val fonte = FontFamily(
@@ -190,6 +192,7 @@ fun Atividade(atividadeData: Classwork) {
                         .weight(0.1f)
                         .size(24.dp)
                 )
+
                 Row(
                     modifier = Modifier.weight(0.9f),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -221,9 +224,21 @@ fun Atividade(atividadeData: Classwork) {
                         }
                     },
                     textAlign = TextAlign.Start,
-                    style = fontePequena
+                    style = fontePequena,
+                    modifier = Modifier
+                        .fillMaxWidth(
+                            if(atividadeData.hasAnswered == true) {
+                                .65f
+                            } else {
+                                .55f
+                            }
+                        )
                 )
-                Spacer(modifier = Modifier.weight(1f))
+
+                if(atividadeData.hasAnswered == false) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -246,7 +261,28 @@ fun Atividade(atividadeData: Classwork) {
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
             ) {
-                Text(text = "${atividadeData.description}", style = fontePequena)
+                Text(
+                    text = "Descrição: ${atividadeData.description}",
+                    style = fontePequena,
+                    modifier = Modifier
+                        .fillMaxWidth(
+                            if(atividadeData.hasAnswered == true) {
+                                .65f
+                            }
+                            else {
+                                1f
+                            }
+                        )
+                )
+
+                if(atividadeData.hasAnswered == true) {
+                    Text(text = "Acertos: ", style = fontePequena)
+                    Text(
+                        text = "${(atividadeData.correctPercentage!!.div(100) * atividadeData.totalQuestions!!).roundToInt()}/${atividadeData.totalQuestions}",
+                        style = fonteBoldPequena,
+                        color = GrayBold
+                    )
+                }
             }
         }
     }

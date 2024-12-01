@@ -36,6 +36,7 @@ import com.example.educai.R
 import com.example.educai.ui.theme.LightGrey
 import com.example.educai.ui.theme.MediumPurple
 import com.example.educai.ui.theme.montserratFontFamily
+import com.example.educai.utils.toDate
 
 @Composable
 fun Post(
@@ -49,14 +50,15 @@ fun Post(
 
     val borderShape = RoundedCornerShape(10.dp)
     val roundedJustOnTop = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
-    val borderStroke = BorderStroke(2.dp, LightGrey)
+    val borderStroke = BorderStroke(1.dp, LightGrey)
 
-    val fonteTitulo = TextStyle(fontSize = 21.sp, fontWeight = FontWeight.SemiBold, fontFamily = montserratFontFamily)
+    val fonteTitulo = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold, fontFamily = montserratFontFamily)
     val fonteDescricao = TextStyle(fontSize = 16.sp, color = Color.Gray, fontFamily = montserratFontFamily)
     val fonteLink = TextStyle(
         fontSize = 16.sp,
         color = MediumPurple,
-        textDecoration = TextDecoration.Underline
+        textDecoration = TextDecoration.Underline,
+        fontFamily = montserratFontFamily
     )
 
     Box(
@@ -79,7 +81,11 @@ fun Post(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(
+                                start = 10.dp
+                            ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -90,7 +96,11 @@ fun Post(
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = title,
-                            style = fonteTitulo
+                            style = fonteTitulo,
+                            modifier = Modifier
+                                .padding(
+                                    top = 2.dp
+                                )
                         )
                     }
                 }
@@ -103,7 +113,7 @@ fun Post(
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "Data de publicação: $date",
+                    text = "Data de publicação: ${date.toDate()}",
                     style = fonteDescricao
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -124,7 +134,6 @@ fun Post(
     }
 }
 
-// Função para abrir o documento no navegador
 fun openDocumentInBrowser(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     context.startActivity(intent)

@@ -152,7 +152,12 @@ fun App(viewModel: AuthViewModel = viewModel()) {
                 }
             }
             composable("home") {
-                MainUI()
+                MainUI {
+                    viewModel.logoff()
+                    isUserLoggedIn = false
+                    navController.navigate("login")
+                    TokenManager.clearTokens(MainActivity.context)
+                }
             }
         }
     }

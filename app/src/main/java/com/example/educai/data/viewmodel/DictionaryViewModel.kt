@@ -1,5 +1,6 @@
 package com.example.educai.data.viewmodel
 
+import android.media.MediaPlayer
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.educai.data.model.ErrorResponse
@@ -11,6 +12,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DictionaryViewModel : ViewModel() {
+    private var mediaPlayer: MediaPlayer? = null
+
     var wordDefinition = MutableLiveData<WordDefinition?>()
         private set
     val errorMessage = MutableLiveData<ErrorResponse>()
@@ -36,5 +39,21 @@ class DictionaryViewModel : ViewModel() {
                 isLoading.value = false
             }
         })
+    }
+
+    fun playAudio(audioUrl: String) {
+        stopAudio()
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(audioUrl)
+            setOnPreparedListener { start() }
+            setOnCompletionListener { stopAudio() }
+            prepareAsync()
+        }
+    }
+
+    fun stopAudio() {
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

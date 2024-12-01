@@ -85,7 +85,6 @@ fun DictionaryModal(
             color = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -166,7 +165,7 @@ fun DictionaryModal(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions.Default,
-                        textStyle = TextStyle(fontSize = 14.sp)
+                        textStyle = TextStyle(fontSize = 14.sp, fontFamily = montserratFontFamily)
                     )
 
                     Button(
@@ -184,7 +183,10 @@ fun DictionaryModal(
                         modifier = Modifier
                             .height(60.dp)
                     ) {
-                        Text(text = "Buscar")
+                        Text(
+                            text = "Buscar",
+                            fontFamily = montserratFontFamily
+                        )
                     }
 
                 }
@@ -214,7 +216,9 @@ fun DictionaryModal(
                             )
 
                             IconButton(
-                                onClick = { /* Reproduzir áudio */ },
+                                onClick = {
+                                    viewModel.playAudio(wordDefinition!!.audio)
+                                },
                                 modifier = Modifier
                                     .size(33.dp)
                                     .padding(start = 12.dp)
