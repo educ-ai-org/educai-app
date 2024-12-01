@@ -72,7 +72,8 @@ class MaterialViewModel : ViewModel() {
                         instructions.takeIf { !it.isNullOrEmpty() },
                         youtubeLink.takeIf { !it.isNullOrEmpty() },
                         audioPart,
-                        documentPart
+                        documentPart,
+                        openai = true
                     ).execute()
                 }
                 handleResponse(context, response)
