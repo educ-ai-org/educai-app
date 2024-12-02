@@ -8,10 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.educai.data.model.ErrorResponse
 import com.example.educai.data.model.Leaderboard
 import com.example.educai.data.network.RetrofitInstance
+import com.example.educai.data.services.LeaderboardService
+import com.example.educai.data.services.UserService
 import com.example.educai.utils.getErrorMessageFromJson
 import kotlinx.coroutines.launch
 
-class LeaderboardViewModel : ViewModel() {
+class LeaderboardViewModel(
+    private val leaderboardService: LeaderboardService,
+    private val userService: UserService
+) : ViewModel() {
     var leaderboard = mutableStateOf<List<Leaderboard>>(emptyList())
     val errorMessage = MutableLiveData<ErrorResponse>()
     var isLoading = mutableStateOf(false)
@@ -20,7 +25,7 @@ class LeaderboardViewModel : ViewModel() {
         viewModelScope.launch {
             isLoading.value = true
             try {
-                val response = RetrofitInstance.leaderboardService.getLeaderboard(classroomId)
+                val response = leaderboardService.getLeaderboard(classroomId)
                 if (response.isSuccessful) {
                     leaderboard.value = response.body() ?: emptyList()
                     fetchStudentPictures(classroomId)
@@ -35,10 +40,10 @@ class LeaderboardViewModel : ViewModel() {
         }
     }
 
-    private suspend fun fetchStudentPictures(classroomId: String) {
+    suspend fun fetchStudentPictures(classroomId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.userService.getProfilePictures(classroomId)
+                val response = userService.getProfilePictures(classroomId)
                 if (response.isSuccessful) {
 
                     val studentPictures = response.body() ?: emptyList()

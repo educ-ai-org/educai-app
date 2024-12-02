@@ -34,7 +34,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.educai.data.contexts.TokenManager
+import com.example.educai.data.di.productionModule
 import com.example.educai.data.model.ErrorResponse
+import com.example.educai.data.network.RetrofitInstance
 import com.example.educai.data.viewmodel.AuthViewModel
 import com.example.educai.screens.Login
 import com.example.educai.screens.MainUI
@@ -43,11 +45,17 @@ import com.example.educai.ui.theme.BackgroundColor
 import com.example.educai.ui.theme.EducAITheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.gson.Gson
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = applicationContext
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(productionModule)
+        }
         enableEdgeToEdge()
         setContent {
             EducAITheme(
