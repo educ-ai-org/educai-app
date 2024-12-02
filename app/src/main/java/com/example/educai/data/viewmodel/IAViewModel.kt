@@ -16,6 +16,7 @@ import com.example.educai.data.model.EduResponse
 import com.example.educai.data.model.ErrorResponse
 import com.example.educai.data.model.Message
 import com.example.educai.data.model.MessageType
+import com.example.educai.data.model.getMessagesToAPI
 import com.example.educai.data.network.RetrofitInstance
 import com.example.educai.utils.getErrorMessageFromJson
 import org.intellij.lang.annotations.Language
@@ -79,10 +80,19 @@ class IAViewModel: ViewModel() {
         tts.stop()
     }
 
-    fun getEduResponse(eduRequest: EduRequest) {
+    fun getEduResponse() {
+        if(_messages.value?.isEmpty() == true) {
+            return
+        }
+
         eduHasSpeaking = true
 
-        val call = RetrofitInstance.iaService.getEduResponse(eduRequest)
+        val call = RetrofitInstance.iaService.getEduResponse(
+            EduRequest(
+                getMessagesToAPI(_messages.value!!),
+                openai = true
+            )
+        )
 
         call.enqueue(object : Callback<EduResponse> {
             override fun onResponse(call: Call<EduResponse>, response: Response<EduResponse>) {

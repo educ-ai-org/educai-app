@@ -5,5 +5,6 @@ data class EduResponse (
 )
 
 data class EduRequest (
-    val question: String
+    val messages: List<MessageDTO>,
+    val openai: Boolean
 )

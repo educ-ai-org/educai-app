@@ -164,7 +164,7 @@ fun FaleComEdu(viewModel: IAViewModel = viewModel()) {
                             )
                         )
 
-                        viewModel.getEduResponse(EduRequest(question = text))
+                        viewModel.getEduResponse()
                     }
                 }
         }
